@@ -2,327 +2,356 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>アチーブメント管理</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A. ACHIEVEMENT</title>
 <style>
-:root{--bg:#f7f4f0;--card:#fff;--ink:#2f2a26;--muted:#8a817a;--line:#e8e1db;--dark:#302a26;--soft:#f1ece7}
-*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
-.app{max-width:520px;margin:auto;min-height:100vh;background:#fbfaf8}
-header{position:sticky;top:0;z-index:20;background:rgba(251,250,248,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:17px 18px}
-h1{font-size:19px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}.hidden{display:none!important}
-main{padding:16px 16px 90px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:13px;box-shadow:0 4px 15px rgba(48,42,38,.035)}
-.label{font-size:12px;color:var(--muted);margin-bottom:7px}.section-title{font-weight:700;font-size:15px;margin-bottom:12px}
-input,select,button{font:inherit;border-radius:12px}input,select{width:100%;padding:12px 13px;border:1px solid #dcd4cd;background:#fff;font-size:16px}
-button{border:0;padding:12px 14px;background:var(--dark);color:#fff;font-weight:700}button.secondary{background:var(--soft);color:var(--ink)}button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
-.row{display:flex;gap:9px}.row>*{flex:1}.topbar{display:flex;gap:8px;margin-bottom:14px}.topbar button{padding:10px;font-size:12px}
-.member-list{display:grid;gap:9px}.member{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:#fff;color:var(--ink);margin:0}
-.member.locked{color:#aaa;background:#faf8f6}.badge{font-size:11px;padding:5px 8px;border-radius:999px;background:var(--soft)}.badge.parent{background:var(--dark);color:#fff}
-.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#f7f3ef;border-radius:13px;padding:10px}.stat b{display:block;font-size:18px}.stat span{font-size:10px;color:var(--muted)}
-.input-card{border:1px solid var(--line);border-radius:15px;padding:13px;margin-bottom:10px;background:#fff}.input-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.input-head strong{font-size:14px}.input-note{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
-.input-grid{display:grid;grid-template-columns:1fr 90px;gap:8px;align-items:end;margin-top:10px}.pts{text-align:right;font-size:12px;color:#625851;padding-bottom:11px}
-.tabs{display:flex;gap:7px;overflow:auto;margin:0 -2px 14px;padding:0 2px}.tabs button{white-space:nowrap;padding:9px 12px;font-size:12px;background:#eee8e2;color:#4a423c}.tabs button.active{background:var(--dark);color:white}
-.history-item{padding:12px 0;border-bottom:1px solid var(--line)}.history-item:last-child{border:0}.history-meta{font-size:11px;color:var(--muted)}.history-main{font-size:13px;margin-top:4px;line-height:1.6}
-.rank-card{display:grid;gap:8px}.rank-row{display:flex;align-items:center;gap:10px;padding:11px;background:#fff;border:1px solid var(--line);border-radius:13px}.rank-no{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-weight:800;font-size:12px}.rank-name{flex:1}.rank-val{font-weight:700}
-.setting-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}.setting-row:last-child{border:0}.small{font-size:11px;padding:8px 10px}
-.notice{font-size:12px;line-height:1.65;background:#f2ede8;padding:12px;border-radius:12px;color:#655c55}
-.bottomnav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:30;width:min(520px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-top:1px solid var(--line);padding:7px 6px calc(7px + env(safe-area-inset-bottom))}
-.bottomnav button{background:#fff;color:#82776f;padding:7px 2px;font-size:10px}.bottomnav button b{display:block;font-size:17px;margin-bottom:2px}.bottomnav button.active{color:var(--ink)}
-hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+:root{
+  --bg:#f8f5f0; --paper:#fffdfa; --ink:#2e2925; --muted:#8d837a;
+  --line:#e8e0d8; --beige:#cbb49a; --beige2:#e9dfd4; --dark:#342e2a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+.app{max-width:560px;margin:auto;min-height:100vh;background:linear-gradient(#fbf8f3,#fff)}
+header{position:sticky;top:0;z-index:20;background:rgba(255,253,250,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:18px 20px}
+.brand{font-family:Georgia,serif;font-style:italic;font-size:27px;letter-spacing:.5px;color:#8e765e}
+.brand small{display:block;font:10px Georgia,serif;letter-spacing:2px;margin-top:-2px}
+.sub{font-size:12px;color:var(--muted);margin-top:5px}
+main{padding:16px 16px 100px}
+.hidden{display:none!important}
+.card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:20px;padding:17px;margin-bottom:13px;box-shadow:0 5px 18px rgba(59,48,38,.04)}
+.section-title{font-size:16px;font-weight:800;margin-bottom:12px}
+.label{font-size:12px;color:var(--muted);margin:10px 0 6px}
+input,select,button,textarea{font:inherit;border-radius:13px}
+input,select,textarea{width:100%;padding:13px;border:1px solid #ddd4cb;background:#fff;font-size:16px;color:var(--ink)}
+button{border:0;padding:12px 14px;background:var(--dark);color:#fff;font-weight:700}
+button.secondary{background:#eee7df;color:var(--ink)}
+button.ghost{background:white;color:var(--ink);border:1px solid var(--line)}
+button.small{width:auto;padding:8px 10px;font-size:12px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#f3ede7;border-radius:15px;padding:11px}
+.stat b{display:block;font-size:19px}.stat span{font-size:10px;color:var(--muted)}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tabs button{flex:1;background:#eee7df;color:#574d45}
+.tabs button.active{background:var(--dark);color:#fff}
+.field{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:10px}
+.field strong{font-size:15px}
+.note{font-size:11px;color:var(--muted);line-height:1.55;margin:4px 0 10px}
+.member{display:flex;align-items:center;justify-content:space-between;padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff;margin-bottom:8px}
+.member.locked{color:#aaa;background:#faf8f5}
+.badge{font-size:11px;padding:5px 8px;border-radius:999px;background:#eee7df}.badge.parent{background:var(--dark);color:#fff}
+.rank{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.rank:last-child{border:0}.rank-no{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:#eee7df;font-weight:800}.rank-name{flex:1}.rank-val{font-weight:800}
+.history{padding:11px 0;border-bottom:1px solid var(--line)}.history:last-child{border:0}
+.history-date{font-size:11px;color:var(--muted)}.history-text{font-size:13px;line-height:1.65;margin-top:4px}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 0;border-bottom:1px solid var(--line)}.setting-row:last-child{border-bottom:0}
+.notice{font-size:12px;line-height:1.65;background:#f1ebe5;padding:12px;border-radius:13px;color:#665c55}
+.bottomnav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:30;width:min(560px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid var(--line);padding:7px 4px calc(7px + env(safe-area-inset-bottom))}
+.bottomnav button{background:#fff;color:#82776e;padding:7px 2px;font-size:10px}.bottomnav button b{display:block;font-size:18px;margin-bottom:3px}.bottomnav button.active{color:#8e765e}
 </style>
 </head>
 <body>
 <div class="app">
-<header><h1>アチーブメント管理</h1><div class="sub" id="headerSub">スタッフログイン</div></header>
+<header>
+  <div class="brand">A.<small>ACHIEVEMENT</small></div>
+  <div class="sub" id="headerSub">スタッフログイン</div>
+</header>
 <main>
-<section id="login">
+<section id="loginScreen">
   <div class="card">
     <div class="section-title">ログイン</div>
     <div class="label">自分の名前</div>
-    <input id="loginName" type="text" list="nameCandidates" autocomplete="off" placeholder="例：森">
-    <datalist id="nameCandidates"></datalist>
-    <div class="label" style="margin-top:12px">4桁PIN</div><input id="pin" type="password" inputmode="numeric" maxlength="4" placeholder="0000">
-    <button id="loginButton" type="button" style="width:100%;margin-top:13px">ログイン</button><div id="loginStatus" class="sub" style="margin-top:10px"></div>
+    <input id="loginName" list="nameList" placeholder="例：森" autocomplete="off">
+    <datalist id="nameList"></datalist>
+    <div class="label">4桁PIN</div>
+    <input id="loginPin" type="password" inputmode="numeric" maxlength="4" placeholder="0000">
+    <button id="loginBtn" style="width:100%;margin-top:13px">ログイン</button>
+    <div class="sub" id="loginMsg"></div>
   </div>
-  <div class="notice">名前は直接入力できます。入力すると登録メンバーの候補が表示されます。試作版のPINは全員「0000」です。</div>
+  <div class="notice">試作版のPINは全員「0000」です。</div>
 </section>
 
 <section id="appScreen" class="hidden">
-  <div id="homePage" class="page"></div>
-  <div id="inputPage" class="page hidden"></div>
-  <div id="rankingPage" class="page hidden"></div>
-  <div id="myPage" class="page hidden"></div>
+  <div id="page"></div>
 </section>
 </main>
+
 <div id="bottomNav" class="bottomnav hidden">
-  <button onclick="go('home')" id="navHome"><b>⌂</b>ホーム</button>
-  <button onclick="go('input')" id="navInput"><b>＋</b>入力</button>
-  <button onclick="go('ranking')" id="navRanking"><b>♕</b>ランキング</button>
-  <button onclick="go('mypage')" id="navMy"><b>○</b>マイページ</button>
+  <button id="navHome" onclick="showHome()"><b>⌂</b>ホーム</button>
+  <button id="navInput" onclick="showInput()"><b>✎</b>入力</button>
+  <button id="navHistory" onclick="showHistory()"><b>▤</b>履歴</button>
+  <button id="navRanking" onclick="showRanking()"><b>♕</b>ランキング</button>
+  <button id="navMy" onclick="showMyPage()"><b>○</b>マイページ</button>
 </div>
 </div>
 
 <script>
-const names=["前出","渡辺","田野","竹中","木下","丸尾","福間","別所","山岸","新井","市岡","浦野","岡本","高橋","上妻","松永","篠崎","磯村","横山","西山","岡田","石本","酒井めい","酒井そうた","鴨井","巣山","浅田","角","森"];
-const initialParents=["田野","渡辺","前出","竹中"];
-const STORE="achieve_app_v4";
+const initialNames=["前出","渡辺","田野","竹中","木下","丸尾","福間","別所","山岸","新井","市岡","浦野","岡本","高橋","上妻","松永","篠崎","磯村","横山","西山","岡田","石本","酒井めい","酒井そうた","鴨井","巣山","浅田","角","森","ゆうい","ゆうと"];
+const initialParents=["前出","渡辺","田野","竹中"];
+const STORE="achievement_complete_v1";
 
-function createDefaultDB(){
+function defaultDB(){
   return {
-    members:names.map(n=>({
-      name:n,
-      device:initialParents.includes(n)?"parent":"child",
-      job:"assistant",
+    members:initialNames.map(name=>({
+      name,
+      device:initialParents.includes(name)?"parent":"child",
+      job:["ゆうい","ゆうと"].includes(name)?"colorist":"assistant",
       pin:"0000"
     })),
-    entries:[]
+    entries:[],
+    customFields:{stylist:[],premium:[],royal:[]}
   };
 }
-
-function loadDB(){
-  try{
-    const raw = window.localStorage.getItem(STORE);
-    if(raw) return JSON.parse(raw);
-  }catch(e){
-    console.warn("localStorage is unavailable in this viewer.", e);
-  }
-  return createDefaultDB();
-}
-
-let db = loadDB();
-let user=null, target=null;
-
-function save(){
-  try{
-    window.localStorage.setItem(STORE, JSON.stringify(db));
-    return true;
-  }catch(e){
-    console.warn("Save skipped because localStorage is unavailable.", e);
-    return false;
-  }
-}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function me(){return db.members.find(x=>x.name===user)}
+function loadDB(){try{return JSON.parse(localStorage.getItem(STORE))||defaultDB()}catch(e){return defaultDB()}}
+let db=loadDB(), user=null, target=null, inputTab="daily";
+function save(){try{localStorage.setItem(STORE,JSON.stringify(db))}catch(e){}}
+function member(name){return db.members.find(m=>m.name===name)}
+function me(){return member(user)}
 function isParent(){return me()?.device==="parent"}
-function member(n){return db.members.find(x=>x.name===n)}
-function populate(){
-  const candidates = document.getElementById("nameCandidates");
-  candidates.innerHTML = db.members.map(m=>`<option value="${esc(m.name)}"></option>`).join("");
-}
-populate();
+function roleJP(j){return {assistant:"アシスタント",colorist:"カラーリスト",jr:"Jr.スタイリスト",stylist:"スタイリスト",premium:"プレミアムスタイリスト",royal:"ロイヤルスタイリスト"}[j]||j}
+function entries(name){return db.entries.filter(e=>e.name===name)}
+function sum(name,key){return entries(name).reduce((a,e)=>a+(Number(e[key])||0),0)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function setActive(id){document.querySelectorAll(".bottomnav button").forEach(b=>b.classList.remove("active"));document.getElementById(id)?.classList.add("active")}
 
-document.getElementById("loginButton").addEventListener("click", doLogin);
-document.getElementById("pin").addEventListener("keydown", function(e){
-  if(e.key === "Enter") doLogin();
-});
-
-function doLogin(){
-  const loginNameEl = document.getElementById("loginName");
-  const pinEl = document.getElementById("pin");
-  const statusEl = document.getElementById("loginStatus");
-  const loginEl = document.getElementById("login");
-  const appScreenEl = document.getElementById("appScreen");
-  const bottomNavEl = document.getElementById("bottomNav");
-  const headerSubEl = document.getElementById("headerSub");
-
-  statusEl.textContent = "確認中…";
-
-  const n = (loginNameEl.value || "").trim();
-  const p = (pinEl.value || "").trim();
-  const m = member(n);
-
-  if(!n){
-    statusEl.textContent = "名前を入力してください";
-    return;
-  }
-  if(!m){
-    statusEl.textContent = "登録されている名前を入力してください";
-    return;
-  }
-  if(m.pin !== p){
-    statusEl.textContent = "PINが違います";
-    return;
-  }
-
-  user = n;
-  target = n;
-  statusEl.textContent = "";
-
-  loginEl.classList.add("hidden");
-  appScreenEl.classList.remove("hidden");
-  bottomNavEl.classList.remove("hidden");
-  headerSubEl.textContent = `${n}｜${m.device==="parent"?"親機（管理者）":"子機"}`;
-
-  go("home");
+document.getElementById("nameList").innerHTML=db.members.map(m=>`<option value="${esc(m.name)}"></option>`).join("");
+document.getElementById("loginBtn").addEventListener("click",login);
+function login(){
+  const n=document.getElementById("loginName").value.trim(), p=document.getElementById("loginPin").value.trim(), m=member(n);
+  if(!m){document.getElementById("loginMsg").textContent="登録されている名前を入力してください";return}
+  if(m.pin!==p){document.getElementById("loginMsg").textContent="PINが違います";return}
+  user=n;target=n;
+  document.getElementById("loginScreen").classList.add("hidden");
+  document.getElementById("appScreen").classList.remove("hidden");
+  document.getElementById("bottomNav").classList.remove("hidden");
+  document.getElementById("headerSub").textContent=`${n}｜${m.device==="parent"?"親機（管理者）":"子機"}`;
+  showHome();
 }
 function logout(){
-  user=null;
-  target=null;
-  document.getElementById("pin").value="";
-  document.getElementById("loginName").value="";
+  user=null;target=null;
   document.getElementById("appScreen").classList.add("hidden");
   document.getElementById("bottomNav").classList.add("hidden");
-  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("loginScreen").classList.remove("hidden");
+  document.getElementById("loginName").value="";
+  document.getElementById("loginPin").value="";
   document.getElementById("headerSub").textContent="スタッフログイン";
 }
-function go(p){
- document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
- document.querySelectorAll(".bottomnav button").forEach(x=>x.classList.remove("active"));
- ({home:"homePage",input:"inputPage",ranking:"rankingPage",mypage:"myPage"})[p] && document.getElementById(({home:"homePage",input:"inputPage",ranking:"rankingPage",mypage:"myPage"})[p]).classList.remove("hidden");
- ({home:"navHome",input:"navInput",ranking:"navRanking",mypage:"navMy"})[p] && document.getElementById(({home:"navHome",input:"navInput",ranking:"navRanking",mypage:"navMy"})[p]).classList.add("active");
- if(p==="home")renderHome(); if(p==="input")renderInput(); if(p==="ranking")renderRanking(); if(p==="mypage")renderMy();
-}
 
-function totals(name){
- let e=db.entries.filter(x=>x.name===name);
- let sum=k=>e.reduce((a,x)=>a+(Number(x[k])||0),0);
- return {
-  lesson:sum("lesson"),plus:sum("plus"),reserve:sum("reserve"),pass:sum("pass"),
-  n20:sum("n20"),n40:sum("n40"),n80:sum("n80"),self:sum("self"),
-  shampooPraise:sum("shampooPraise"),mini:sum("mini"),otherNew:sum("otherNew"),
-  referral:sum("referral")
- };
+function lessonPoints(h){
+  h=Math.min(Number(h)||0,150);
+  let p=0;
+  if(h<=50)p=h;
+  else if(h<=120)p=50+(h-50)*10;
+  else p=50+70*10+(h-120)*20;
+  if(h>=50)p+=451;
+  if(h>=120)p+=210;
+  return p;
 }
-function assistantPoints(t){
- let h=Math.min(t.lesson,150), lessonPts=0;
- if(h<=50)lessonPts=h;
- else if(h<=120)lessonPts=50+(h-50)*10;
- else lessonPts=50+70*10+(h-120)*20;
- let bonus=(h>=50?451:0)+(h>=120?210:0);
- return lessonPts+bonus+t.n20*20+t.n40*40+t.n80*80+t.reserve*20+t.pass*100;
-}
-const jrBonuses=[[30,55],[40,140],[50,425],[60,510],[70,595],[80,680],[90,765],[100,185]];
-function jrPoints(t){
- let lesson=t.lesson>=20?t.lesson*1.5:0;
- let bonus=jrBonuses.reduce((a,[h,p])=>a+(t.lesson>=h?p:0),0);
- return lesson+bonus+t.referral*100;
-}
-function pointsFor(name){
- const m=member(name),t=totals(name);
- if(m.job==="jr")return jrPoints(t);
- return assistantPoints(t);
-}
-function roleJP(j){return {assistant:"アシスタント",colorist:"カラーリスト",jr:"Jr.スタイリスト",stylist:"スタイリスト",premium:"プレミアムスタイリスト",royal:"ロイヤルスタイリスト"}[j]||j}
-
-function renderHome(){
- const t=totals(target),m=member(target);
- let list=db.members.map(x=>{
-   const allowed=isParent()||x.name===user;
-   return `<button class="member ${allowed?"":"locked"}" ${allowed?`onclick="target='${x.name}';renderHome()"`:"disabled"}>
-    <span>${esc(x.name)}${allowed?"":" 🔒"}</span><span class="badge ${x.device==="parent"?"parent":""}">${x.device==="parent"?"親機":"子機"}</span>
-   </button>`;
- }).join("");
- document.getElementById("homePage").innerHTML=`
- <div class="card">
-   <div class="label">表示中</div><div style="font-size:21px;font-weight:800">${esc(target)}</div>
-   <div class="sub">${roleJP(m.job)} ${target===user?"・自分":""}</div>
-   <div class="statgrid" style="margin-top:14px">
-    <div class="stat"><b>${pointsFor(target).toLocaleString()}</b><span>現在ポイント</span></div>
-    <div class="stat"><b>${t.lesson}</b><span>レッスン時間</span></div>
-    <div class="stat"><b>¥${t.plus.toLocaleString()}</b><span>プラス提案額</span></div>
-   </div>
- </div>
- ${isParent()?`<div class="card"><div class="section-title">スタッフ選択</div><div class="member-list">${list}</div></div>`:
- `<div class="card"><div class="section-title">スタッフ</div><div class="member-list">${list}</div></div>`}`;
-}
-function field(key,title,note="",type="number",step="1"){
- return `<div class="input-card"><div class="input-head"><div><strong>${title}</strong>${note?`<div class="input-note">${note}</div>`:""}</div></div>
- <div class="input-grid"><input id="f_${key}" type="${type}" ${type==="number"?`step="${step}" min="0"`:""} placeholder="0"><div class="pts" id="p_${key}"></div></div></div>`;
-}
-function renderInput(){
- const m=member(target),today=new Date().toISOString().slice(0,10);
- let fields="";
- if(["assistant","colorist"].includes(m.job)){
-  fields+=field("lesson","レッスン時間","150時間を超えて入力できますが、ポイント対象は150時間まで","number","0.5");
-  fields+=field("plus","プラス提案額","金額のみ記録・ポイントなし");
-  fields+=field("n20","指名ポイント 20pt対象","シャンプー／3step／10分スパ／20分スパ の件数");
-  fields+=field("n40","指名ポイント 40pt対象","Aujua／バイカルテ／30分スパ の件数");
-  fields+=field("n80","指名ポイント 80pt対象","インメトリィ／髪質改善 の件数");
-  fields+=field("reserve","次回予約獲得数","1件 = 20pt");
-  fields+=field("pass","レッスン合格数","1件 = 100pt");
-  fields+=field("self","新規自己集客","件数のみ・ポイントなし");
-  fields+=field("shampooPraise","シャンプー賞賛","ランキング集計用・ポイントなし");
-  if(m.job==="colorist"){
-   fields+=field("mini","新規来店者数（ミニモ）","件数のみ・ポイントなし");
-   fields+=field("otherNew","新規来店者数（ミニモ以外）","件数のみ・ポイントなし");
+const jrLessonBonuses=[[30,55],[40,140],[50,425],[60,510],[70,595],[80,680],[90,765],[100,185]];
+function totalPoints(name){
+  const m=member(name), e=entries(name), h=sum(name,"lesson");
+  const extras=e.reduce((a,x)=>a+(Number(x.extraPoints)||0),0);
+  if(m.job==="assistant"){
+    return lessonPoints(h)+sum(name,"n20")*20+sum(name,"n40")*40+sum(name,"n80")*80+
+      sum(name,"assistantNomination")*30+sum(name,"assistantReviews")*50+sum(name,"preStaffLesson")*30+extras;
   }
- } else if(m.job==="jr"){
-  fields+=field("lesson","レッスン時間","20時間未満は0pt、20時間以上は1時間=1.5pt","number","0.5");
-  fields+=field("plus","プラス提案額","金額のみ記録・ポイントなし");
-  fields+=field("self","新規自己集客","件数のみ・ポイントなし");
-  fields+=field("referral","紹介カード戻り","1枚 = 100pt");
-  fields+=field("shampooPraise","シャンプー賞賛","ランキング集計用・ポイントなし");
-  fields+=`<div class="input-card"><strong>昇格ポイント</strong><div class="input-note">該当する場合のみ選択</div><select id="promotion" style="margin-top:10px"><option value="0">なし</option><option value="1000">6ヶ月昇格 +1000pt</option><option value="3000">3ヶ月昇格 +3000pt</option><option value="5000">初月昇格 +5000pt</option></select></div>`;
- } else {
-  fields=`<div class="notice">この役職の入力項目は後から追加予定です。</div>`;
- }
- document.getElementById("inputPage").innerHTML=`
- <div class="card"><div class="section-title">${esc(target)}｜${roleJP(m.job)}</div>
- <div class="label">記入日</div><input id="entryDate" type="date" value="${today}"></div>
- ${fields}
- ${["assistant","colorist","jr"].includes(m.job)?`<button style="width:100%" onclick="saveEntry()">この内容を保存</button>`:""}`;
+  if(m.job==="jr"){
+    const lp=h>=20?h*1.5:0;
+    const bonus=jrLessonBonuses.reduce((a,[hh,p])=>a+(h>=hh?p:0),0);
+    return lp+bonus+sum(name,"referral")*100+extras;
+  }
+  return extras;
 }
-function val(k){return Number(document.getElementById("f_"+k)?.value||0)}
+
+function showHome(){
+  setActive("navHome");
+  const m=member(target), h=sum(target,"lesson"), plus=sum(target,"plus");
+  document.getElementById("page").innerHTML=`
+    <div class="card">
+      <div class="sub">表示中</div>
+      <div style="font-size:24px;font-weight:800;margin-top:3px">${esc(target)}</div>
+      <div class="sub">${roleJP(m.job)}${target===user?"・自分":""}</div>
+      <div class="grid3" style="margin-top:15px">
+        <div class="stat"><b>${totalPoints(target).toLocaleString()}</b><span>現在ポイント</span></div>
+        <div class="stat"><b>${h}</b><span>レッスン時間</span></div>
+        <div class="stat"><b>¥${plus.toLocaleString()}</b><span>プラス提案額</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">スタッフ</div>
+      ${db.members.map(x=>{
+        const allowed=isParent()||x.name===user;
+        return `<div class="member ${allowed?"":"locked"}" ${allowed?`onclick="target='${x.name}';showHome()"`:""}>
+          <span>${esc(x.name)}${allowed?"":" 🔒"}</span>
+          <span class="badge ${x.device==="parent"?"parent":""}">${x.device==="parent"?"親機":"子機"}</span>
+        </div>`;
+      }).join("")}
+    </div>`;
+}
+
+function field(id,title,note="",step="1"){
+  return `<div class="field"><strong>${title}</strong><div class="note">${note}</div><input id="${id}" type="number" min="0" step="${step}" placeholder="0"></div>`;
+}
+function customFieldsHTML(role){
+  return (db.customFields[role]||[]).map((f,i)=>field(`custom_${i}`,f.name,f.note||"",f.step||"1")).join("");
+}
+
+function showInput(){
+  setActive("navInput");
+  const m=member(target), today=new Date().toISOString().slice(0,10);
+  let daily="", monthly="";
+  if(m.job==="assistant"){
+    daily+=field("lesson","レッスン時間","150時間を超えて入力可。ポイント対象は150時間まで。","0.5");
+    daily+=field("plus","プラス提案額","金額のみ記録。ポイントなし。");
+    daily+=field("n20","指名ポイント 20pt対象","シャンプー／3step／10分スパ／20分スパ の件数");
+    daily+=field("n40","指名ポイント 40pt対象","Aujua／バイカルテ／30分スパ の件数");
+    daily+=field("n80","指名ポイント 80pt対象","インメトリィ／髪質改善 の件数");
+    daily+=field("assistantNomination","アシスタント指名獲得数","1件 = 30pt");
+    daily+=field("assistantReviews","アシスタント クチコミ件数","1件 = 50pt");
+    daily+=field("preStaffLesson","入社前スタッフのレッスン監督","1時間 = 30pt","0.5");
+    daily+=`<div class="field"><strong>カット1発合格</strong><div class="note">各項目につき1回だけポイント獲得</div>
+      <select id="cutPass"><option value="">なし</option><option value="layerAdvanced">レイヤー上級 +500pt</option><option value="oneLength">ワンレン +800pt</option><option value="sameLayer">セイムレイヤー +800pt</option><option value="mash">マッシュ +800pt</option><option value="layerBasic">レイヤー初級 +1500pt</option><option value="short">ショート +1500pt</option></select></div>`;
+    monthly+=`<div class="field"><strong>無遅刻無欠席</strong><div class="note">1ヶ月達成 +100pt／6ヶ月達成 +300pt。各達成条件は1回のみ。</div>
+      <select id="assistantAttendance"><option value="">登録なし</option><option value="month1">1ヶ月達成 +100pt</option><option value="month6">6ヶ月達成 +300pt</option></select></div>`;
+  } else if(m.job==="colorist"){
+    daily+=field("lesson","レッスン時間","時間を記録","0.5");
+    daily+=field("plus","プラス提案額","金額のみ記録");
+    daily+=field("n20","指名ポイント 20pt対象","件数");
+    daily+=field("n40","指名ポイント 40pt対象","件数");
+    daily+=field("n80","指名ポイント 80pt対象","件数");
+    if(["ゆうい","ゆうと"].includes(target)){
+      daily+=field("self","新規自己集客","ゆうい・ゆうとのみ表示／件数のみ");
+      daily+=field("reserve","次回予約獲得数","ゆうい・ゆうとのみ表示／件数のみ");
+      daily+=field("mini","新規来店者数（ミニモ）","件数のみ");
+      daily+=field("otherNew","新規来店者数（ミニモ以外）","件数のみ");
+    }
+  } else if(m.job==="jr"){
+    daily+=field("lesson","レッスン時間","20時間未満は0pt。20時間以上は1時間 = 1.5pt。","0.5");
+    daily+=field("referral","紹介カード戻り","1枚 = 100pt");
+    daily+=`<div class="field"><strong>昇格ポイント</strong><div class="note">該当時のみ登録</div>
+      <select id="promotion"><option value="0">なし</option><option value="1000">6ヶ月昇格 +1000pt</option><option value="3000">3ヶ月昇格 +3000pt</option><option value="5000">初月昇格 +5000pt</option></select></div>`;
+    monthly+=field("newNext","新規次回予約数（ミニモ除く）","10人以上からポイント対象");
+    monthly+=field("newGuests","新規客数（ミニモ除く）","比率 = 新規次回予約数 ÷ 新規客数 × 100");
+    monthly+=field("minimoRepeat","ミニモリピート率（%）","30〜50%=150pt／51〜70%=500pt／71%以上=800pt","0.1");
+    monthly+=field("unitPrice","客単価","13,000〜13,999円=130pt／14,000〜14,999円=140pt／15,000円以上=300pt");
+    monthly+=field("techSales","技術売上","店販売上比の計算に使用");
+    monthly+=field("retailSales","店販売上","技術売上に対して10%以上=200pt／15%以上=300pt");
+    monthly+=field("bangVisitors","次回予約特典・前髪カット","来店者数");
+    monthly+=field("curlVisitors","次回予約特典・コテ巻き","前髪カットとの総数 × 10pt");
+    monthly+=field("reviewCount","口コミ件数","30以上=100pt／40以上=120pt／50以上=200pt");
+    monthly+=`<div class="field"><strong>無遅刻無欠席</strong><div class="note">1ヶ月達成 = ベースポイント +100pt</div>
+      <select id="jrAttendance"><option value="0">未達成／登録なし</option><option value="100">達成 +100pt</option></select></div>`;
+  } else {
+    daily+=customFieldsHTML(m.job)||`<div class="notice">この役職にはまだ項目がありません。親機の「役職別項目設定」から追加できます。</div>`;
+  }
+  document.getElementById("page").innerHTML=`
+    <div class="card"><div class="section-title">${esc(target)}｜${roleJP(m.job)}</div><div class="label">記入日</div><input id="entryDate" type="date" value="${today}"></div>
+    ${monthly?`<div class="tabs"><button class="${inputTab==="daily"?"active":""}" onclick="inputTab='daily';showInput()">日々入力</button><button class="${inputTab==="monthly"?"active":""}" onclick="inputTab='monthly';showInput()">月末入力</button></div>`:""}
+    <div>${inputTab==="monthly"&&monthly?monthly:daily}</div>
+    <button style="width:100%" onclick="saveEntry()">この内容を保存</button>`;
+}
+function val(id){return Number(document.getElementById(id)?.value||0)}
 function saveEntry(){
- const m=member(target);
- let e={id:Date.now(),name:target,date:document.getElementById("entryDate").value||new Date().toISOString().slice(0,10),
- lesson:val("lesson"),plus:val("plus"),n20:val("n20"),n40:val("n40"),n80:val("n80"),
- reserve:val("reserve"),pass:val("pass"),self:val("self"),shampooPraise:val("shampooPraise"),
- mini:val("mini"),otherNew:val("otherNew"),referral:val("referral"),promotion:Number(document.getElementById("promotion")?.value||0)
- };
- db.entries.push(e);save();alert("保存しました");renderInput();
+  const m=member(target);
+  const e={id:Date.now(),name:target,date:document.getElementById("entryDate").value||new Date().toISOString().slice(0,10),extraPoints:0,mode:inputTab};
+  ["lesson","plus","n20","n40","n80","assistantNomination","assistantReviews","preStaffLesson","self","reserve","mini","otherNew","referral"].forEach(k=>e[k]=val(k));
+
+  if(m.job==="assistant"){
+    const cut=document.getElementById("cutPass")?.value;
+    if(cut){
+      const mp={layerAdvanced:500,oneLength:800,sameLayer:800,mash:800,layerBasic:1500,short:1500};
+      if(entries(target).some(x=>x.cutPass===cut)){alert("このカット項目はすでにポイント獲得済みです");return}
+      e.cutPass=cut;e.extraPoints+=mp[cut];
+    }
+    const att=document.getElementById("assistantAttendance")?.value;
+    if(att){
+      if(entries(target).some(x=>x.assistantAttendance===att)){alert("この無遅刻無欠席の達成ポイントはすでに獲得済みです");return}
+      e.assistantAttendance=att;e.extraPoints+=att==="month1"?100:300;
+    }
+  }
+  if(m.job==="jr"){
+    e.extraPoints+=val("promotion");
+    if(inputTab==="monthly"){
+      const newNext=val("newNext"),newGuests=val("newGuests"),ratio=newGuests>0?newNext/newGuests*100:0;
+      let nextPts=0;
+      if(newNext>=10){nextPts=ratio>=100?1000:ratio>=90?500:ratio>=80?300:ratio>=70?100:ratio>=60?60:0}
+      const mr=val("minimoRepeat"),mrPts=mr>=71?800:mr>=51?500:mr>=30?150:0;
+      const up=val("unitPrice"),upPts=up>=15000?300:up>=14000?140:up>=13000?130:0;
+      const tech=val("techSales"),ret=val("retailSales"),retRatio=tech>0?ret/tech*100:0,retPts=retRatio>=15?300:retRatio>=10?200:0;
+      const visitors=val("bangVisitors")+val("curlVisitors");
+      const rc=val("reviewCount"),reviewPts=rc>=50?200:rc>=40?120:rc>=30?100:0;
+      const att=val("jrAttendance");
+      e.newNext=newNext;e.newGuests=newGuests;e.newNextRatio=ratio;e.minimoRepeat=mr;e.unitPrice=up;e.techSales=tech;e.retailSales=ret;e.retailRatio=retRatio;e.bangVisitors=val("bangVisitors");e.curlVisitors=val("curlVisitors");e.reviewCount=rc;
+      e.extraPoints+=nextPts+mrPts+upPts+retPts+visitors*10+reviewPts+att;
+    }
+  }
+  if(["stylist","premium","royal"].includes(m.job)){
+    (db.customFields[m.job]||[]).forEach((f,i)=>e["custom_"+i]=val("custom_"+i));
+  }
+  db.entries.push(e);save();alert("保存しました");showInput();
 }
-function monthEntries(){
- const ym=new Date().toISOString().slice(0,7);
- return db.entries.filter(e=>e.date?.startsWith(ym));
-}
-function rankingData(key){
- let e=monthEntries(), arr=db.members.map(m=>{
-  const es=e.filter(x=>x.name===m.name);
-  let v=0;
-  if(key==="nominationPoints")v=es.reduce((a,x)=>a+(x.n20||0)*20+(x.n40||0)*40+(x.n80||0)*80,0);
-  else if(key==="nominationCount")v=es.reduce((a,x)=>a+(x.n20||0)+(x.n40||0)+(x.n80||0),0);
-  else v=es.reduce((a,x)=>a+(Number(x[key])||0),0);
-  return {name:m.name,v};
- }).sort((a,b)=>b.v-a.v).slice(0,3);
- return arr;
-}
-let rankKey="lesson";
-function renderRanking(){
- const tabs=[["lesson","レッスン時間"],["plus","プラス提案額"],["nominationCount","指名獲得数"],["nominationPoints","指名ポイント"],["shampooPraise","シャンプー賞賛"]];
- let a=rankingData(rankKey);
- document.getElementById("rankingPage").innerHTML=`<div class="card"><div class="section-title">今月のランキング TOP3</div>
- <div class="tabs">${tabs.map(([k,t])=>`<button class="${rankKey===k?"active":""}" onclick="rankKey='${k}';renderRanking()">${t}</button>`).join("")}</div>
- <div class="rank-card">${a.map((r,i)=>`<div class="rank-row"><div class="rank-no">${i+1}</div><div class="rank-name">${esc(r.name)}</div><div class="rank-val">${rankKey==="plus"?"¥":""}${r.v.toLocaleString()}${rankKey==="lesson"?"h":""}</div></div>`).join("")}</div></div>`;
-}
-function renderMy(){
- const m=me(),hist=db.entries.filter(x=>x.name===user).sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,20);
- let settings=isParent()?`<div class="card"><div class="section-title">メンバー権限設定</div>${db.members.map(x=>`<div class="setting-row"><div><b>${esc(x.name)}</b><div class="sub">${x.device==="parent"?"親機（管理者）":"子機"}</div></div><button class="secondary small" onclick="toggleDevice('${x.name}')">${x.device==="parent"?"子機に変更":"親機に変更"}</button></div>`).join("")}</div>`:"";
- document.getElementById("myPage").innerHTML=`
- <div class="card"><div class="section-title">マイページ</div><b style="font-size:20px">${esc(user)}</b><div class="sub">${roleJP(m.job)}｜${m.device==="parent"?"親機（管理者）":"子機"}</div>
- <hr><div class="label">役職</div><select id="jobSelect" onchange="changeJob(this.value)">
- ${[["assistant","アシスタント"],["colorist","カラーリスト"],["jr","Jr.スタイリスト"],["stylist","スタイリスト"],["premium","プレミアムスタイリスト"],["royal","ロイヤルスタイリスト"]].map(([v,t])=>`<option value="${v}" ${m.job===v?"selected":""}>${t}</option>`).join("")}
- </select><button class="secondary" style="width:100%;margin-top:12px" onclick="logout()">ログアウト</button></div>
- ${settings}
- <div class="card"><div class="section-title">入力履歴</div>${hist.length?hist.map(e=>`<div class="history-item"><div class="history-meta">${e.date}</div><div class="history-main">${historyText(e)}</div></div>`).join(""):`<div class="sub">まだ入力履歴がありません。</div>`}</div>`;
-}
+
 function historyText(e){
- let arr=[];
- [["lesson","レッスン"],["plus","プラス提案"],["n20","20pt指名"],["n40","40pt指名"],["n80","80pt指名"],["reserve","次回予約"],["pass","レッスン合格"],["self","新規自己集客"],["shampooPraise","シャンプー賞賛"],["mini","新規ミニモ"],["otherNew","新規その他"],["referral","紹介カード"]].forEach(([k,t])=>{if(e[k])arr.push(`${t}: ${k==="plus"?"¥":""}${e[k]}`)});
- if(e.promotion)arr.push(`昇格ポイント: +${e.promotion}pt`);
- return arr.join(" ／ ")||"入力なし";
+  const out=[];
+  const map={lesson:"レッスン時間",plus:"プラス提案額",n20:"20pt指名",n40:"40pt指名",n80:"80pt指名",assistantNomination:"アシスタント指名",assistantReviews:"クチコミ",preStaffLesson:"入社前スタッフ監督",self:"新規自己集客",reserve:"次回予約獲得",referral:"紹介カード"};
+  Object.entries(map).forEach(([k,t])=>{if(Number(e[k]))out.push(`${t}: ${k==="plus"?"¥":""}${e[k]}`)});
+  if(e.cutPass)out.push(`カット1発合格 +${e.extraPoints}pt`);
+  if(e.newNextRatio!==undefined)out.push(`新規次回予約率 ${e.newNextRatio.toFixed(1)}%`);
+  if(e.retailRatio!==undefined)out.push(`店販売上比 ${e.retailRatio.toFixed(1)}%`);
+  if(e.extraPoints&&!e.cutPass)out.push(`追加ポイント +${e.extraPoints}pt`);
+  return out.join(" ／ ")||"記録あり";
 }
-function changeJob(v){me().job=v;save();target=user;renderMy()}
+function showHistory(){
+  setActive("navHistory");
+  const data=entries(target).slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  document.getElementById("page").innerHTML=`<div class="card"><div class="section-title">${esc(target)}の履歴</div>${data.length?data.map(e=>`<div class="history"><div class="history-date">${e.date}</div><div class="history-text">${historyText(e)}</div></div>`).join(""):`<div class="sub">まだ履歴がありません。</div>`}</div>`;
+}
+
+let rankKey="lesson";
+function rankValue(name,key){
+  if(key==="nominationCount")return sum(name,"assistantNomination");
+  if(key==="nominationPoints")return sum(name,"n20")*20+sum(name,"n40")*40+sum(name,"n80")*80;
+  if(key==="shampooPraise")return sum(name,"shampooPraise");
+  return sum(name,key);
+}
+function showRanking(){
+  setActive("navRanking");
+  const tabs=[["lesson","レッスン時間"],["plus","プラス提案額"],["nominationCount","指名獲得数"],["nominationPoints","指名ポイント"],["shampooPraise","シャンプー賞賛"]];
+  const rows=db.members.map(m=>({name:m.name,v:rankValue(m.name,rankKey)})).sort((a,b)=>b.v-a.v).slice(0,3);
+  document.getElementById("page").innerHTML=`<div class="card"><div class="section-title">現在進行形ランキング TOP3</div><div class="tabs">${tabs.map(([k,t])=>`<button class="${rankKey===k?"active":""}" onclick="rankKey='${k}';showRanking()">${t}</button>`).join("")}</div>${rows.map((r,i)=>`<div class="rank"><div class="rank-no">${i+1}</div><div class="rank-name">${esc(r.name)}</div><div class="rank-val">${rankKey==="plus"?"¥":""}${r.v.toLocaleString()}${rankKey==="lesson"?"h":""}</div></div>`).join("")}</div>`;
+}
+
 function toggleDevice(name){
- if(!isParent())return;
- let x=member(name),cnt=db.members.filter(m=>m.device==="parent").length;
- if(x.device==="parent"&&cnt<=1){alert("最後の親機は子機に変更できません");return}
- x.device=x.device==="parent"?"child":"parent";save();
- if(name===user&&x.device==="child"){document.getElementById("headerSub").textContent=`${user}｜子機`;alert("自分を子機に変更しました");}
- renderMy();
+  if(!isParent())return;
+  const t=member(name),cnt=db.members.filter(m=>m.device==="parent").length;
+  if(t.device==="parent"&&cnt<=1){alert("最後の親機は子機に変更できません");return}
+  t.device=t.device==="parent"?"child":"parent";save();
+  if(name===user)document.getElementById("headerSub").textContent=`${user}｜${t.device==="parent"?"親機（管理者）":"子機"}`;
+  showMyPage();
 }
-window.addEventListener("error", function(e){
-  console.error(e.error || e.message);
-});
+function addCustomField(role){
+  const name=document.getElementById("newFieldName").value.trim();
+  const note=document.getElementById("newFieldNote").value.trim();
+  if(!name){alert("項目名を入力してください");return}
+  db.customFields[role].push({name,note,step:"1"});save();showMyPage();
+}
+function deleteCustomField(role,index){db.customFields[role].splice(index,1);save();showMyPage()}
+function showMyPage(){
+  setActive("navMy");
+  const m=me();
+  let admin="";
+  if(isParent()){
+    admin+=`<div class="card"><div class="section-title">メンバー権限設定</div>${db.members.map(x=>`<div class="setting-row"><div><b>${esc(x.name)}</b><div class="sub">${x.device==="parent"?"親機（管理者）":"子機"}</div></div><button class="secondary small" onclick="toggleDevice('${x.name}')">${x.device==="parent"?"子機に変更":"親機に変更"}</button></div>`).join("")}</div>`;
+    admin+=`<div class="card"><div class="section-title">役職別項目設定</div><div class="notice">スタイリスト以降の項目を、コードを触らず親機から追加できます。</div>
+      <div class="label">役職</div><select id="customRole" onchange="showMyPage()"><option value="stylist">スタイリスト</option><option value="premium">プレミアムスタイリスト</option><option value="royal">ロイヤルスタイリスト</option></select>
+      <div class="label">項目名</div><input id="newFieldName" placeholder="例：店販売上">
+      <div class="label">説明</div><input id="newFieldNote" placeholder="例：月末に入力">
+      <button style="width:100%;margin-top:10px" onclick="addCustomField(document.getElementById('customRole').value)">項目を追加</button>
+      <div style="margin-top:14px">${["stylist","premium","royal"].map(role=>`<div class="field"><strong>${roleJP(role)}</strong><div class="note">${(db.customFields[role]||[]).length?"":"まだ項目なし"}</div>${(db.customFields[role]||[]).map((f,i)=>`<div class="setting-row"><span>${esc(f.name)}</span><button class="secondary small" onclick="deleteCustomField('${role}',${i})">削除</button></div>`).join("")}</div>`).join("")}</div>
+    </div>`;
+  }
+  document.getElementById("page").innerHTML=`<div class="card"><div class="section-title">マイページ</div><b style="font-size:21px">${esc(user)}</b><div class="sub">${roleJP(m.job)}｜${m.device==="parent"?"親機（管理者）":"子機"}</div><div class="label">役職</div><select onchange="me().job=this.value;save();target=user;showMyPage()">${[["assistant","アシスタント"],["colorist","カラーリスト"],["jr","Jr.スタイリスト"],["stylist","スタイリスト"],["premium","プレミアムスタイリスト"],["royal","ロイヤルスタイリスト"]].map(([v,t])=>`<option value="${v}" ${m.job===v?"selected":""}>${t}</option>`).join("")}</select><button class="secondary" style="width:100%;margin-top:12px" onclick="logout()">ログアウト</button></div>${admin}`;
+}
 </script>
 </body>
 </html>
