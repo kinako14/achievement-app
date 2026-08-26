@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>アチーブメント管理</title>
+<style>
+:root{--bg:#f7f4f0;--card:#fff;--ink:#2f2a26;--muted:#8a817a;--line:#e8e1db;--dark:#302a26;--soft:#f1ece7}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif}
+.app{max-width:520px;margin:auto;min-height:100vh;background:#fbfaf8}
+header{position:sticky;top:0;z-index:20;background:rgba(251,250,248,.96);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:17px 18px}
+h1{font-size:19px;margin:0}.sub{font-size:12px;color:var(--muted);margin-top:4px}.hidden{display:none!important}
+main{padding:16px 16px 90px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:13px;box-shadow:0 4px 15px rgba(48,42,38,.035)}
+.label{font-size:12px;color:var(--muted);margin-bottom:7px}.section-title{font-weight:700;font-size:15px;margin-bottom:12px}
+input,select,button{font:inherit;border-radius:12px}input,select{width:100%;padding:12px 13px;border:1px solid #dcd4cd;background:#fff;font-size:16px}
+button{border:0;padding:12px 14px;background:var(--dark);color:#fff;font-weight:700}button.secondary{background:var(--soft);color:var(--ink)}button.ghost{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.row{display:flex;gap:9px}.row>*{flex:1}.topbar{display:flex;gap:8px;margin-bottom:14px}.topbar button{padding:10px;font-size:12px}
+.member-list{display:grid;gap:9px}.member{display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:#fff;color:var(--ink);margin:0}
+.member.locked{color:#aaa;background:#faf8f6}.badge{font-size:11px;padding:5px 8px;border-radius:999px;background:var(--soft)}.badge.parent{background:var(--dark);color:#fff}
+.statgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#f7f3ef;border-radius:13px;padding:10px}.stat b{display:block;font-size:18px}.stat span{font-size:10px;color:var(--muted)}
+.input-card{border:1px solid var(--line);border-radius:15px;padding:13px;margin-bottom:10px;background:#fff}.input-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.input-head strong{font-size:14px}.input-note{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.5}
+.input-grid{display:grid;grid-template-columns:1fr 90px;gap:8px;align-items:end;margin-top:10px}.pts{text-align:right;font-size:12px;color:#625851;padding-bottom:11px}
+.tabs{display:flex;gap:7px;overflow:auto;margin:0 -2px 14px;padding:0 2px}.tabs button{white-space:nowrap;padding:9px 12px;font-size:12px;background:#eee8e2;color:#4a423c}.tabs button.active{background:var(--dark);color:white}
+.history-item{padding:12px 0;border-bottom:1px solid var(--line)}.history-item:last-child{border:0}.history-meta{font-size:11px;color:var(--muted)}.history-main{font-size:13px;margin-top:4px;line-height:1.6}
+.rank-card{display:grid;gap:8px}.rank-row{display:flex;align-items:center;gap:10px;padding:11px;background:#fff;border:1px solid var(--line);border-radius:13px}.rank-no{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-weight:800;font-size:12px}.rank-name{flex:1}.rank-val{font-weight:700}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}.setting-row:last-child{border:0}.small{font-size:11px;padding:8px 10px}
+.notice{font-size:12px;line-height:1.65;background:#f2ede8;padding:12px;border-radius:12px;color:#655c55}
+.bottomnav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:30;width:min(520px,100%);display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-top:1px solid var(--line);padding:7px 6px calc(7px + env(safe-area-inset-bottom))}
+.bottomnav button{background:#fff;color:#82776f;padding:7px 2px;font-size:10px}.bottomnav button b{display:block;font-size:17px;margin-bottom:2px}.bottomnav button.active{color:var(--ink)}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
+</style>
+</head>
+<body>
+<div class="app">
+<header><h1>アチーブメント管理</h1><div class="sub" id="headerSub">スタッフログイン</div></header>
+<main>
+<section id="login">
+  <div class="card">
+    <div class="section-title">ログイン</div>
+    <div class="label">自分の名前</div>
+    <input id="loginName" type="text" list="nameCandidates" autocomplete="off" placeholder="例：森">
+    <datalist id="nameCandidates"></datalist>
+    <div class="label" style="margin-top:12px">4桁PIN</div><input id="pin" type="password" inputmode="numeric" maxlength="4" placeholder="0000">
+    <button id="loginButton" type="button" style="width:100%;margin-top:13px">ログイン</button><div id="loginStatus" class="sub" style="margin-top:10px"></div>
+  </div>
+  <div class="notice">名前は直接入力できます。入力すると登録メンバーの候補が表示されます。試作版のPINは全員「0000」です。</div>
+</section>
+
+<section id="appScreen" class="hidden">
+  <div id="homePage" class="page"></div>
+  <div id="inputPage" class="page hidden"></div>
+  <div id="rankingPage" class="page hidden"></div>
+  <div id="myPage" class="page hidden"></div>
+</section>
+</main>
+<div id="bottomNav" class="bottomnav hidden">
+  <button onclick="go('home')" id="navHome"><b>⌂</b>ホーム</button>
+  <button onclick="go('input')" id="navInput"><b>＋</b>入力</button>
+  <button onclick="go('ranking')" id="navRanking"><b>♕</b>ランキング</button>
+  <button onclick="go('mypage')" id="navMy"><b>○</b>マイページ</button>
+</div>
+</div>
+
+<script>
+const names=["前出","渡辺","田野","竹中","木下","丸尾","福間","別所","山岸","新井","市岡","浦野","岡本","高橋","上妻","松永","篠崎","磯村","横山","西山","岡田","石本","酒井めい","酒井そうた","鴨井","巣山","浅田","角","森"];
+const initialParents=["田野","渡辺","前出","竹中"];
+const STORE="achieve_app_v4";
+
+function createDefaultDB(){
+  return {
+    members:names.map(n=>({
+      name:n,
+      device:initialParents.includes(n)?"parent":"child",
+      job:"assistant",
+      pin:"0000"
+    })),
+    entries:[]
+  };
+}
+
+function loadDB(){
+  try{
+    const raw = window.localStorage.getItem(STORE);
+    if(raw) return JSON.parse(raw);
+  }catch(e){
+    console.warn("localStorage is unavailable in this viewer.", e);
+  }
+  return createDefaultDB();
+}
+
+let db = loadDB();
+let user=null, target=null;
+
+function save(){
+  try{
+    window.localStorage.setItem(STORE, JSON.stringify(db));
+    return true;
+  }catch(e){
+    console.warn("Save skipped because localStorage is unavailable.", e);
+    return false;
+  }
+}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function me(){return db.members.find(x=>x.name===user)}
+function isParent(){return me()?.device==="parent"}
+function member(n){return db.members.find(x=>x.name===n)}
+function populate(){
+  const candidates = document.getElementById("nameCandidates");
+  candidates.innerHTML = db.members.map(m=>`<option value="${esc(m.name)}"></option>`).join("");
+}
+populate();
+
+document.getElementById("loginButton").addEventListener("click", doLogin);
+document.getElementById("pin").addEventListener("keydown", function(e){
+  if(e.key === "Enter") doLogin();
+});
+
+function doLogin(){
+  const loginNameEl = document.getElementById("loginName");
+  const pinEl = document.getElementById("pin");
+  const statusEl = document.getElementById("loginStatus");
+  const loginEl = document.getElementById("login");
+  const appScreenEl = document.getElementById("appScreen");
+  const bottomNavEl = document.getElementById("bottomNav");
+  const headerSubEl = document.getElementById("headerSub");
+
+  statusEl.textContent = "確認中…";
+
+  const n = (loginNameEl.value || "").trim();
+  const p = (pinEl.value || "").trim();
+  const m = member(n);
+
+  if(!n){
+    statusEl.textContent = "名前を入力してください";
+    return;
+  }
+  if(!m){
+    statusEl.textContent = "登録されている名前を入力してください";
+    return;
+  }
+  if(m.pin !== p){
+    statusEl.textContent = "PINが違います";
+    return;
+  }
+
+  user = n;
+  target = n;
+  statusEl.textContent = "";
+
+  loginEl.classList.add("hidden");
+  appScreenEl.classList.remove("hidden");
+  bottomNavEl.classList.remove("hidden");
+  headerSubEl.textContent = `${n}｜${m.device==="parent"?"親機（管理者）":"子機"}`;
+
+  go("home");
+}
+function logout(){
+  user=null;
+  target=null;
+  document.getElementById("pin").value="";
+  document.getElementById("loginName").value="";
+  document.getElementById("appScreen").classList.add("hidden");
+  document.getElementById("bottomNav").classList.add("hidden");
+  document.getElementById("login").classList.remove("hidden");
+  document.getElementById("headerSub").textContent="スタッフログイン";
+}
+function go(p){
+ document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));
+ document.querySelectorAll(".bottomnav button").forEach(x=>x.classList.remove("active"));
+ ({home:"homePage",input:"inputPage",ranking:"rankingPage",mypage:"myPage"})[p] && document.getElementById(({home:"homePage",input:"inputPage",ranking:"rankingPage",mypage:"myPage"})[p]).classList.remove("hidden");
+ ({home:"navHome",input:"navInput",ranking:"navRanking",mypage:"navMy"})[p] && document.getElementById(({home:"navHome",input:"navInput",ranking:"navRanking",mypage:"navMy"})[p]).classList.add("active");
+ if(p==="home")renderHome(); if(p==="input")renderInput(); if(p==="ranking")renderRanking(); if(p==="mypage")renderMy();
+}
+
+function totals(name){
+ let e=db.entries.filter(x=>x.name===name);
+ let sum=k=>e.reduce((a,x)=>a+(Number(x[k])||0),0);
+ return {
+  lesson:sum("lesson"),plus:sum("plus"),reserve:sum("reserve"),pass:sum("pass"),
+  n20:sum("n20"),n40:sum("n40"),n80:sum("n80"),self:sum("self"),
+  shampooPraise:sum("shampooPraise"),mini:sum("mini"),otherNew:sum("otherNew"),
+  referral:sum("referral")
+ };
+}
+function assistantPoints(t){
+ let h=Math.min(t.lesson,150), lessonPts=0;
+ if(h<=50)lessonPts=h;
+ else if(h<=120)lessonPts=50+(h-50)*10;
+ else lessonPts=50+70*10+(h-120)*20;
+ let bonus=(h>=50?451:0)+(h>=120?210:0);
+ return lessonPts+bonus+t.n20*20+t.n40*40+t.n80*80+t.reserve*20+t.pass*100;
+}
+const jrBonuses=[[30,55],[40,140],[50,425],[60,510],[70,595],[80,680],[90,765],[100,185]];
+function jrPoints(t){
+ let lesson=t.lesson>=20?t.lesson*1.5:0;
+ let bonus=jrBonuses.reduce((a,[h,p])=>a+(t.lesson>=h?p:0),0);
+ return lesson+bonus+t.referral*100;
+}
+function pointsFor(name){
+ const m=member(name),t=totals(name);
+ if(m.job==="jr")return jrPoints(t);
+ return assistantPoints(t);
+}
+function roleJP(j){return {assistant:"アシスタント",colorist:"カラーリスト",jr:"Jr.スタイリスト",stylist:"スタイリスト",premium:"プレミアムスタイリスト",royal:"ロイヤルスタイリスト"}[j]||j}
+
+function renderHome(){
+ const t=totals(target),m=member(target);
+ let list=db.members.map(x=>{
+   const allowed=isParent()||x.name===user;
+   return `<button class="member ${allowed?"":"locked"}" ${allowed?`onclick="target='${x.name}';renderHome()"`:"disabled"}>
+    <span>${esc(x.name)}${allowed?"":" 🔒"}</span><span class="badge ${x.device==="parent"?"parent":""}">${x.device==="parent"?"親機":"子機"}</span>
+   </button>`;
+ }).join("");
+ document.getElementById("homePage").innerHTML=`
+ <div class="card">
+   <div class="label">表示中</div><div style="font-size:21px;font-weight:800">${esc(target)}</div>
+   <div class="sub">${roleJP(m.job)} ${target===user?"・自分":""}</div>
+   <div class="statgrid" style="margin-top:14px">
+    <div class="stat"><b>${pointsFor(target).toLocaleString()}</b><span>現在ポイント</span></div>
+    <div class="stat"><b>${t.lesson}</b><span>レッスン時間</span></div>
+    <div class="stat"><b>¥${t.plus.toLocaleString()}</b><span>プラス提案額</span></div>
+   </div>
+ </div>
+ ${isParent()?`<div class="card"><div class="section-title">スタッフ選択</div><div class="member-list">${list}</div></div>`:
+ `<div class="card"><div class="section-title">スタッフ</div><div class="member-list">${list}</div></div>`}`;
+}
+function field(key,title,note="",type="number",step="1"){
+ return `<div class="input-card"><div class="input-head"><div><strong>${title}</strong>${note?`<div class="input-note">${note}</div>`:""}</div></div>
+ <div class="input-grid"><input id="f_${key}" type="${type}" ${type==="number"?`step="${step}" min="0"`:""} placeholder="0"><div class="pts" id="p_${key}"></div></div></div>`;
+}
+function renderInput(){
+ const m=member(target),today=new Date().toISOString().slice(0,10);
+ let fields="";
+ if(["assistant","colorist"].includes(m.job)){
+  fields+=field("lesson","レッスン時間","150時間を超えて入力できますが、ポイント対象は150時間まで","number","0.5");
+  fields+=field("plus","プラス提案額","金額のみ記録・ポイントなし");
+  fields+=field("n20","指名ポイント 20pt対象","シャンプー／3step／10分スパ／20分スパ の件数");
+  fields+=field("n40","指名ポイント 40pt対象","Aujua／バイカルテ／30分スパ の件数");
+  fields+=field("n80","指名ポイント 80pt対象","インメトリィ／髪質改善 の件数");
+  fields+=field("reserve","次回予約獲得数","1件 = 20pt");
+  fields+=field("pass","レッスン合格数","1件 = 100pt");
+  fields+=field("self","新規自己集客","件数のみ・ポイントなし");
+  fields+=field("shampooPraise","シャンプー賞賛","ランキング集計用・ポイントなし");
+  if(m.job==="colorist"){
+   fields+=field("mini","新規来店者数（ミニモ）","件数のみ・ポイントなし");
+   fields+=field("otherNew","新規来店者数（ミニモ以外）","件数のみ・ポイントなし");
+  }
+ } else if(m.job==="jr"){
+  fields+=field("lesson","レッスン時間","20時間未満は0pt、20時間以上は1時間=1.5pt","number","0.5");
+  fields+=field("plus","プラス提案額","金額のみ記録・ポイントなし");
+  fields+=field("self","新規自己集客","件数のみ・ポイントなし");
+  fields+=field("referral","紹介カード戻り","1枚 = 100pt");
+  fields+=field("shampooPraise","シャンプー賞賛","ランキング集計用・ポイントなし");
+  fields+=`<div class="input-card"><strong>昇格ポイント</strong><div class="input-note">該当する場合のみ選択</div><select id="promotion" style="margin-top:10px"><option value="0">なし</option><option value="1000">6ヶ月昇格 +1000pt</option><option value="3000">3ヶ月昇格 +3000pt</option><option value="5000">初月昇格 +5000pt</option></select></div>`;
+ } else {
+  fields=`<div class="notice">この役職の入力項目は後から追加予定です。</div>`;
+ }
+ document.getElementById("inputPage").innerHTML=`
+ <div class="card"><div class="section-title">${esc(target)}｜${roleJP(m.job)}</div>
+ <div class="label">記入日</div><input id="entryDate" type="date" value="${today}"></div>
+ ${fields}
+ ${["assistant","colorist","jr"].includes(m.job)?`<button style="width:100%" onclick="saveEntry()">この内容を保存</button>`:""}`;
+}
+function val(k){return Number(document.getElementById("f_"+k)?.value||0)}
+function saveEntry(){
+ const m=member(target);
+ let e={id:Date.now(),name:target,date:document.getElementById("entryDate").value||new Date().toISOString().slice(0,10),
+ lesson:val("lesson"),plus:val("plus"),n20:val("n20"),n40:val("n40"),n80:val("n80"),
+ reserve:val("reserve"),pass:val("pass"),self:val("self"),shampooPraise:val("shampooPraise"),
+ mini:val("mini"),otherNew:val("otherNew"),referral:val("referral"),promotion:Number(document.getElementById("promotion")?.value||0)
+ };
+ db.entries.push(e);save();alert("保存しました");renderInput();
+}
+function monthEntries(){
+ const ym=new Date().toISOString().slice(0,7);
+ return db.entries.filter(e=>e.date?.startsWith(ym));
+}
+function rankingData(key){
+ let e=monthEntries(), arr=db.members.map(m=>{
+  const es=e.filter(x=>x.name===m.name);
+  let v=0;
+  if(key==="nominationPoints")v=es.reduce((a,x)=>a+(x.n20||0)*20+(x.n40||0)*40+(x.n80||0)*80,0);
+  else if(key==="nominationCount")v=es.reduce((a,x)=>a+(x.n20||0)+(x.n40||0)+(x.n80||0),0);
+  else v=es.reduce((a,x)=>a+(Number(x[key])||0),0);
+  return {name:m.name,v};
+ }).sort((a,b)=>b.v-a.v).slice(0,3);
+ return arr;
+}
+let rankKey="lesson";
+function renderRanking(){
+ const tabs=[["lesson","レッスン時間"],["plus","プラス提案額"],["nominationCount","指名獲得数"],["nominationPoints","指名ポイント"],["shampooPraise","シャンプー賞賛"]];
+ let a=rankingData(rankKey);
+ document.getElementById("rankingPage").innerHTML=`<div class="card"><div class="section-title">今月のランキング TOP3</div>
+ <div class="tabs">${tabs.map(([k,t])=>`<button class="${rankKey===k?"active":""}" onclick="rankKey='${k}';renderRanking()">${t}</button>`).join("")}</div>
+ <div class="rank-card">${a.map((r,i)=>`<div class="rank-row"><div class="rank-no">${i+1}</div><div class="rank-name">${esc(r.name)}</div><div class="rank-val">${rankKey==="plus"?"¥":""}${r.v.toLocaleString()}${rankKey==="lesson"?"h":""}</div></div>`).join("")}</div></div>`;
+}
+function renderMy(){
+ const m=me(),hist=db.entries.filter(x=>x.name===user).sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,20);
+ let settings=isParent()?`<div class="card"><div class="section-title">メンバー権限設定</div>${db.members.map(x=>`<div class="setting-row"><div><b>${esc(x.name)}</b><div class="sub">${x.device==="parent"?"親機（管理者）":"子機"}</div></div><button class="secondary small" onclick="toggleDevice('${x.name}')">${x.device==="parent"?"子機に変更":"親機に変更"}</button></div>`).join("")}</div>`:"";
+ document.getElementById("myPage").innerHTML=`
+ <div class="card"><div class="section-title">マイページ</div><b style="font-size:20px">${esc(user)}</b><div class="sub">${roleJP(m.job)}｜${m.device==="parent"?"親機（管理者）":"子機"}</div>
+ <hr><div class="label">役職</div><select id="jobSelect" onchange="changeJob(this.value)">
+ ${[["assistant","アシスタント"],["colorist","カラーリスト"],["jr","Jr.スタイリスト"],["stylist","スタイリスト"],["premium","プレミアムスタイリスト"],["royal","ロイヤルスタイリスト"]].map(([v,t])=>`<option value="${v}" ${m.job===v?"selected":""}>${t}</option>`).join("")}
+ </select><button class="secondary" style="width:100%;margin-top:12px" onclick="logout()">ログアウト</button></div>
+ ${settings}
+ <div class="card"><div class="section-title">入力履歴</div>${hist.length?hist.map(e=>`<div class="history-item"><div class="history-meta">${e.date}</div><div class="history-main">${historyText(e)}</div></div>`).join(""):`<div class="sub">まだ入力履歴がありません。</div>`}</div>`;
+}
+function historyText(e){
+ let arr=[];
+ [["lesson","レッスン"],["plus","プラス提案"],["n20","20pt指名"],["n40","40pt指名"],["n80","80pt指名"],["reserve","次回予約"],["pass","レッスン合格"],["self","新規自己集客"],["shampooPraise","シャンプー賞賛"],["mini","新規ミニモ"],["otherNew","新規その他"],["referral","紹介カード"]].forEach(([k,t])=>{if(e[k])arr.push(`${t}: ${k==="plus"?"¥":""}${e[k]}`)});
+ if(e.promotion)arr.push(`昇格ポイント: +${e.promotion}pt`);
+ return arr.join(" ／ ")||"入力なし";
+}
+function changeJob(v){me().job=v;save();target=user;renderMy()}
+function toggleDevice(name){
+ if(!isParent())return;
+ let x=member(name),cnt=db.members.filter(m=>m.device==="parent").length;
+ if(x.device==="parent"&&cnt<=1){alert("最後の親機は子機に変更できません");return}
+ x.device=x.device==="parent"?"child":"parent";save();
+ if(name===user&&x.device==="child"){document.getElementById("headerSub").textContent=`${user}｜子機`;alert("自分を子機に変更しました");}
+ renderMy();
+}
+window.addEventListener("error", function(e){
+  console.error(e.error || e.message);
+});
+</script>
+</body>
+</html>
