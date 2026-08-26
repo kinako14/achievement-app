@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>francesca.achievement</title>
+<style>
+:root{
+  --bg:#f7f4ef;
+  --paper:#fffdfa;
+  --ink:#2f2925;
+  --muted:#8a817a;
+  --line:#e7dfd7;
+  --accent:#b99f84;
+  --accent2:#dbcbb9;
+  --soft:#f2ece6;
+  --dark:#332d29;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif
+}
+.app{max-width:560px;margin:auto;min-height:100vh;background:linear-gradient(#fcfaf7,#fff)}
+header{
+  position:sticky;top:0;z-index:20;padding:15px 18px 13px;
+  background:rgba(255,253,250,.96);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)
+}
+.brand{font-family:Georgia,serif;letter-spacing:.4px;font-size:20px}
+.brand span{color:var(--accent)}
+.head-sub{font-size:11px;color:var(--muted);margin-top:3px}
+main{padding:16px 15px 98px}
+.hidden{display:none!important}
+.card{
+  background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:20px;
+  padding:16px;margin-bottom:12px;box-shadow:0 7px 22px rgba(62,49,38,.045)
+}
+.hero{
+  background:linear-gradient(135deg,#fff 0%,#fbf6f0 60%,#f2e8de 100%);
+  padding:20px;border-radius:24px;border:1px solid var(--line);margin-bottom:13px
+}
+.hero .eyebrow{font-size:11px;color:var(--muted);letter-spacing:.08em}
+.hero .name{font-family:Georgia,"Yu Mincho",serif;font-size:28px;margin:4px 0 3px}
+.hero .role{font-size:12px;color:#756c64}
+.hero-total{margin-top:18px;display:flex;align-items:end;justify-content:space-between;gap:10px}
+.hero-total .num{font-family:Georgia,serif;font-size:44px;line-height:1}
+.hero-total .unit{font-size:13px;margin-left:4px}
+.hero-total .month{font-size:11px;color:var(--muted);text-align:right;line-height:1.6}
+.section-title{font-size:16px;font-weight:800;margin-bottom:12px}
+.label{font-size:12px;color:var(--muted);margin:9px 0 6px}
+input,select,button,textarea{font:inherit;border-radius:13px}
+input,select,textarea{
+  width:100%;padding:13px;border:1px solid #ddd4cc;background:#fff;color:var(--ink);font-size:16px
+}
+button{border:0;padding:12px 14px;background:var(--dark);color:#fff;font-weight:700}
+button.secondary{background:#eee7df;color:var(--ink)}
+button.ghost{background:white;color:var(--ink);border:1px solid var(--line)}
+button.small{width:auto;padding:8px 10px;font-size:12px}
+.metric-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.metric{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px;
+  min-height:112px
+}
+.metric .icon{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  background:var(--soft);color:#7f6b58;font-size:16px;margin-bottom:9px
+}
+.metric .title{font-size:11px;color:var(--muted)}
+.metric .value{font-family:Georgia,serif;font-size:23px;margin-top:2px}
+.metric .meta{font-size:10px;color:var(--muted);margin-top:7px;line-height:1.45}
+.progress{height:6px;background:#eee8e2;border-radius:999px;overflow:hidden;margin-top:8px}
+.progress > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#cdb69d);border-radius:999px}
+.tabs{display:flex;gap:7px;margin-bottom:12px;overflow:auto}
+.tabs button{white-space:nowrap;background:#eee7df;color:#584f48;padding:9px 11px;font-size:11px}
+.tabs button.active{background:var(--dark);color:#fff}
+.field{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:10px
+}
+.field-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.field strong{font-size:15px}
+.note{font-size:11px;color:var(--muted);line-height:1.55;margin:4px 0 10px}
+.current-mini{font-size:11px;color:#6f655d;text-align:right}
+.goal-row{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--muted);margin-top:7px}
+.preview{
+  background:linear-gradient(135deg,#3a332e,#57493e);color:#fff;border-radius:20px;
+  padding:17px;margin:14px 0
+}
+.preview .smalltxt{font-size:11px;opacity:.75}
+.preview .big{font-family:Georgia,serif;font-size:34px;margin-top:4px}
+.preview .desc{font-size:11px;opacity:.8;margin-top:4px;line-height:1.5}
+.member{display:flex;align-items:center;justify-content:space-between;padding:12px;border:1px solid var(--line);border-radius:14px;background:#fff;margin-bottom:8px}
+.member.locked{color:#aaa;background:#faf8f5}
+.badge{font-size:11px;padding:5px 8px;border-radius:999px;background:#eee7df}
+.badge.parent{background:var(--dark);color:#fff}
+.rank{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
+.rank:last-child{border:0}
+.rank-no{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#eee7df;font-weight:800}
+.rank-name{flex:1}.rank-val{font-weight:800}
+.history{padding:11px 0;border-bottom:1px solid var(--line)}
+.history:last-child{border:0}
+.history-date{font-size:10px;color:var(--muted)}
+.history-text{font-size:13px;line-height:1.6;margin-top:4px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 0;border-bottom:1px solid var(--line)}
+.setting-row:last-child{border-bottom:0}
+.notice{font-size:12px;line-height:1.65;background:#f1ebe5;padding:12px;border-radius:13px;color:#665c55}
+.bottomnav{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:30;width:min(560px,100%);
+  display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border-top:1px solid var(--line);
+  padding:7px 4px calc(7px + env(safe-area-inset-bottom))
+}
+.bottomnav button{background:#fff;color:#82776e;padding:7px 2px;font-size:10px}
+.bottomnav button b{display:block;font-size:18px;margin-bottom:3px}
+.bottomnav button.active{color:#9a8068}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">francesca.<span>achievement</span></div>
+  <div id="headerSub" class="head-sub">スタッフログイン</div>
+</header>
+
+<main>
+<section id="loginScreen">
+  <div class="card">
+    <div class="section-title">ログイン</div>
+    <div class="label">自分の名前</div>
+    <input id="loginName" list="nameList" placeholder="例：佐藤" autocomplete="off">
+    <datalist id="nameList"></datalist>
+    <div class="label">4桁PIN</div>
+    <input id="loginPin" type="password" inputmode="numeric" maxlength="4" placeholder="0000">
+    <button id="loginBtn" style="width:100%;margin-top:13px">ログイン</button>
+    <div id="loginMsg" class="head-sub"></div>
+  </div>
+  <div class="notice">試作版のPINは全員「0000」です。</div>
+</section>
+
+<section id="appScreen" class="hidden"><div id="page"></div></section>
+</main>
+
+<div id="bottomNav" class="bottomnav hidden">
+  <button id="navHome" onclick="showHome()"><b>⌂</b>ホーム</button>
+  <button id="navInput" onclick="showInput()"><b>✎</b>入力</button>
+  <button id="navHistory" onclick="showHistory()"><b>▤</b>履歴</button>
+  <button id="navRanking" onclick="showRanking()"><b>♕</b>ランキング</button>
+  <button id="navMy" onclick="showMyPage()"><b>○</b>マイページ</button>
+</div>
+</div>
+
+<script>
+const initialNames=["竹中","前出","渡辺","田野","木下","丸尾","福間","別所","山岸","新井","市岡","浦野","岡本","高橋","上妻","松永","篠崎","磯村","横山","西山","岡田","石本","酒井めい","酒井そうた","鴨井","巣山","浅田","角","森"];
+const initialParents=["前出","渡辺","田野"];
+const STORE="francesca_achievement_v4"; const APP_VERSION="v3-20260827";
+const roles=["assistant","jr","stylist","premium"];
+function defaultRules(){return {
+ assistant:{lesson1:1,lesson2:10,lesson3:20,bonus50:451,bonus120:210,n20:20,n40:40,n80:60,nomination:30,reviews:50,preStaffLesson:30,cutLayerAdvanced:500,cutOneLength:800,cutSameLayer:800,cutMash:800,cutLayerBasic:1500,cutShort:1500},
+ jr:{supervision:50,referral:100,nextBenefit:10,self20:100,self40:300,self50:500,self60:600,self70:700,self100mult:50},
+ stylist:{promo6:2000,promo3:4500,promoFirst:7000,referral:100,assistantGuest:10,nextBenefit:10,supervision:50,retail5:100,retail10:300,retail20:700,review40:150,review50:250,review60:350,review70mult:10,attendance:100,next70:100,next80:200,next90:500,next100:800,self30:200,self40:400,self50:700,self60:1000,self70:1200,self100mult:50,minimo30:300,minimo51:700,minimo71:1200,lesson10:10,lesson20:40,lesson30:150,lesson40:250,lesson50mult:10,unit14:140,unit15:200,unit16:400,unit17:600,unit18:1000},
+ premium:{promo6:3000,promo3:5000,promoFirst:8000,referral:100,supervision:50,assistantGuest:10,nextBenefit:10,next75:100,next80:200,next85:300,next90:800,next100:1000,minimo30:300,minimo51:850,minimo71:1500,self30:250,self40:500,self50:850,self60:1200,self70:1500,self100mult:50,unit16:500,unit17:800,unit18:1200,unit19:1500,unit20:2000,retail10:500,retail15:750,retail20:1000,review40:100,review50:200,review60:300,review70mult:10,attendance:150,benefit:1000}
+}}
+function defaultDB(){return {members:initialNames.map(name=>({name,device:initialParents.includes(name)?"parent":"child",job:"assistant",pin:"0000",active:true})),entries:[],rules:defaultRules(),customPoints:{assistant:[],jr:[],stylist:[],premium:[]}}}
+function loadDB(){
+  try{
+    let d=JSON.parse(localStorage.getItem(STORE))||defaultDB();
+    const def=defaultDB();
+    d.members=d.members||[];
+    def.members.forEach(dm=>{if(!d.members.some(m=>m.name===dm.name))d.members.push(dm)});
+    d.entries=d.entries||[];
+    d.rules=d.rules||{};
+    Object.entries(defaultRules()).forEach(([role,vals])=>{d.rules[role]={...vals,...(d.rules[role]||{})}});
+    d.customPoints=d.customPoints||{}; roles.forEach(r=>d.customPoints[r]=d.customPoints[r]||[]);
+    return d;
+  }catch(e){return defaultDB()}
+}
+let db=loadDB(),user=null,target=null,inputTab="daily"; function save(){localStorage.setItem(STORE,JSON.stringify(db))}
+function member(n){return db.members.find(m=>m.name===n)} function me(){return member(user)} function isParent(){return me()?.device==="parent"}
+function roleJP(j){return {assistant:"アシスタント",jr:"Jr.スタイリスト",stylist:"スタイリスト",premium:"プレミアムスタイリスト"}[j]||j}
+function entries(n){return db.entries.filter(e=>e.name===n)} function sum(n,k,monthOnly=false){let a=monthOnly?monthEntries(n):entries(n);return a.reduce((x,e)=>x+(Number(e[k])||0),0)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function currentMonth(){return new Date().toISOString().slice(0,7)} function monthEntries(n){return entries(n).filter(e=>(e.date||"").startsWith(currentMonth()))}
+function monthlyPoints(n){return monthEntries(n).reduce((a,e)=>a+(+e.entryPoints||0),0)} function totalPoints(n){return entries(n).reduce((a,e)=>a+(+e.entryPoints||0),0)}
+function setActive(id){document.querySelectorAll('.bottomnav button').forEach(b=>b.classList.remove('active'));document.getElementById(id)?.classList.add('active')}
+function orderedMembers(list=db.members){return list.slice().sort((a,b)=>{if(a.name==='竹中'&&b.name!=='竹中')return -1;if(b.name==='竹中'&&a.name!=='竹中')return 1;return db.members.indexOf(a)-db.members.indexOf(b)})}
+function refreshNames(){document.getElementById('nameList').innerHTML=orderedMembers(db.members.filter(m=>m.active!==false)).map(m=>`<option value="${esc(m.name)}"></option>`).join('')}
+refreshNames(); document.getElementById('loginBtn').addEventListener('click',login);
+function login(){let n=loginName.value.trim(),p=loginPin.value.trim(),m=member(n);if(!m||m.active===false){loginMsg.textContent='登録されている名前を入力してください';return}if(m.pin!==p){loginMsg.textContent='PINが違います';return}user=target=n;loginScreen.classList.add('hidden');appScreen.classList.remove('hidden');bottomNav.classList.remove('hidden');headerSub.textContent=`${n}｜${m.device==='parent'?'親機（管理者）':'子機'}`;showHome()}
+function logout(){user=target=null;appScreen.classList.add('hidden');bottomNav.classList.add('hidden');loginScreen.classList.remove('hidden');loginName.value='';loginPin.value='';headerSub.textContent='スタッフログイン'}
+function homeStatsHTML(job){
+  let stats=[];
+  if(job==='assistant'){
+    stats=[
+      ['レッスン時間',`${sum(target,'lesson')}h`],
+      ['プラス提案額',`¥${sum(target,'plus').toLocaleString()}`],
+      ['アシスタント指名獲得',`${sum(target,'assistantNomination')}件`],
+      ['アシスタント口コミ',`${sum(target,'assistantReviews')}件`],
+      ['入社前スタッフ監督',`${sum(target,'preStaffLesson')}h`]
+    ];
+  }else if(job==='jr'){
+    stats=[
+      ['紹介カード戻り',`${sum(target,'referral',true)}枚`],
+      ['レッスン監督時間',`${sum(target,'preStaffLesson',true)}h`],
+      ['新規自己集客',`${sum(target,'selfAttractDaily',true)}人`]
+    ];
+  }else if(job==='stylist'){
+    stats=[
+      ['紹介カード戻り',`${sum(target,'referral',true)}枚`],
+      ['アシスタント指名あり',`${sum(target,'assistantGuest',true)}人`],
+      ['次回予約特典来店',`${sum(target,'nextBenefitVisitors',true)}人`],
+      ['レッスン監督時間',`${sum(target,'preStaffLesson',true)}h`],
+      ['新規自己集客',`${sum(target,'selfAttractDaily',true)}人`],
+      ['レッスン時間',`${sum(target,'lessonRecordDaily',true)}h`]
+    ];
+  }else if(job==='premium'){
+    stats=[
+      ['紹介カード戻り',`${sum(target,'referral',true)}枚`],
+      ['レッスン監督時間',`${sum(target,'supervision',true)}h`],
+      ['アシスタント指名あり',`${sum(target,'assistantGuest',true)}人`],
+      ['次回予約特典来店',`${sum(target,'nextBenefitVisitors',true)}人`],
+      ['新規自己集客',`${sum(target,'selfAttractDaily',true)}人`]
+    ];
+  }
+  if(!stats.length)return '';
+  return `<div class="card"><div class="section-title">今月の状況</div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">${stats.map(([label,value])=>`<div style="padding:14px;border:1px solid #eee5dc;border-radius:16px;background:#fffdfb"><div class="head-sub" style="margin-bottom:5px">${label}</div><b style="font-size:20px;color:#5d5045">${value}</b></div>`).join('')}</div></div>`;
+}
+function showHome(){setActive('navHome');let m=member(target),recent=entries(target).slice().sort((a,b)=>(b.id||0)-(a.id||0)).slice(0,3);page.innerHTML=`<div class="hero"><div class="eyebrow">MY ACHIEVEMENT</div><div class="name">${esc(target)}</div><div class="role">${roleJP(m.job)}${target===user?'・自分':''}</div><div class="hero-total"><div><span class="num">${Math.round(totalPoints(target)).toLocaleString()}</span><span class="unit">pt</span></div><div class="month">今月の獲得<br><b style="font-size:18px;color:#5d5045">${Math.round(monthlyPoints(target)).toLocaleString()} pt</b></div></div></div>${homeStatsHTML(m.job)}<div class="card"><div class="section-title">最近の記録</div>${recent.length?recent.map(e=>`<div class="history"><div class="history-date">${e.date}</div><div class="history-text">${historyText(e)}</div></div>`).join(''):'<div class="head-sub">まだ記録がありません。</div>'}</div>${isParent()?`<div class="card"><div class="section-title">スタッフ切り替え</div>${orderedMembers(db.members.filter(x=>x.active!==false)).map(x=>`<div class="member" onclick="target='${x.name}';showHome()"><span>${esc(x.name)}</span><span class="badge ${x.device==='parent'?'parent':''}">${roleJP(x.job)}｜${x.device==='parent'?'親機':'子機'}</span></div>`).join('')}</div>`:''}`}
+function field(id,title,note='',step='1',current='-',extra=''){let cs=String(current),num=Number(cs.replace(/[^0-9.\-]/g,''))||0,prefix=cs.trim().startsWith('¥')?'¥':'',suffix=cs.includes('%')?'%':cs.trim().endsWith('h')?'h':cs.trim().endsWith('人')?'人':cs.trim().endsWith('枚')?'枚':'';return `<div class="field"><div class="field-head"><div><strong>${title}</strong><div class="note">${note}</div></div><div class="current-mini">現在<br><b id="cur_${id}" data-base="${num}" data-prefix="${prefix}" data-suffix="${suffix}">${current}</b></div></div><input id="${id}" type="number" min="0" step="${step}" placeholder="0" oninput="updatePreview()">${extra}</div>`}
+function selectField(id,title,note,opts){return `<div class="field"><strong>${title}</strong><div class="note">${note}</div><select id="${id}" onchange="updatePreview()">${opts.map(([v,t])=>`<option value="${v}">${t}</option>`).join('')}</select></div>`}
+function dailySelf(){return field('selfAttractDaily','新規自己集客（※媒体問わない）','日々の人数記録用。ここではポイントは付与されません。','1',`${sum(target,'selfAttractDaily',true)}人`)}
+function dailyLessonRecord(){return field('lessonRecordDaily','レッスン','日々の時間記録用。ここではポイントは付与されません。','0.5',`${sum(target,'lessonRecordDaily',true)}h`)}
+function customPointFields(role,mode){return (db.customPoints?.[role]||[]).filter(x=>x.mode===mode).map(x=>field(`customPoint_${x.id}`,esc(x.name),esc(x.note||customPointRuleText(x)),'1','-')).join('')}
+function customPointRuleText(x){return x.calc==='fixed'?`${x.threshold}以上で ${x.points}pt`:`入力数 × ${x.points}pt`}
+function jrDailyFields(){return field('referral','紹介カード戻り枚数','1枚 = 100pt　※紹介カードの現物があること','1',`${sum(target,'referral',true)}枚`)+field('preStaffLesson','入社前スタッフのレッスン監督時間','営業時間外のみ','0.5',`${sum(target,'preStaffLesson',true)}h`)+dailySelf()}
+function ratioFields(){return field('newNext','新規次回予約数（ミニモ除く）','新規次回予約の比率を算出するために記入','1','-')+field('newGuests','新規客数（ミニモ除く）','新規次回予約の比率を算出するために記入','1','-')}
+function retailFields(note){return field('techSales','技術売上','店販売上比の計算に使用','1','-')+field('retailSales','店販売上',note,'1','0%')}
+function jrMonthlyFields(){return ratioFields()+field('minimoRepeat','ミニモリピート率（%）','30〜50%=150pt／51〜70%=500pt／71%以上=800pt','0.1','-')+field('unitPrice','客単価','13,000円以上=130pt／14,000円以上=140pt／15,000円以上=300pt','1','-')+retailFields('技術売上に対する割合を自動計算')+field('nextBenefitVisitors','次回予約特典による来店','前髪カット＋コテ巻きの総数を入力。総数 × 10pt','1','-')+field('reviewCount','クチコミ件数','30以上=100pt／40以上=120pt／50以上=200pt','1','-')+field('selfAttractMonth','新規自己集客（※媒体問わない）','日々入力の「現在」を確認して月末に入力','1',`${sum(target,'selfAttractDaily',true)}人`)+selectField('jrAttendance','1ヶ月無遅刻無欠席','達成でベースポイント100pt',[[0,'未達成／登録なし'],[100,'達成 +100pt']])+selectField('promotion','スタイリスト昇格','6ヶ月以内=1000pt／3ヶ月以内=3000pt／初月=5000pt',[[0,'なし'],[1000,'6ヶ月以内 +1000pt'],[3000,'3ヶ月以内 +3000pt'],[5000,'初月 +5000pt']])}
+function stylistDailyFields(){return selectField('promotion','プレミアムスタイリスト昇格','スタイリスト昇格からの期間',[[0,'なし'],[2000,'6ヶ月以内 +2000pt'],[4500,'3ヶ月以内 +4500pt'],[7000,'昇格後 初月指名技術売上 税抜300万達成 +7000pt']])+field('referral','紹介カード戻り枚数','1枚 = 100pt　※紹介カードの現物があること','1',`${sum(target,'referral',true)}枚`)+field('assistantGuest','アシスタント指名ありのお客様人数','1人 = 10pt','1',`${sum(target,'assistantGuest',true)}人`)+field('nextBenefitVisitors','次回予約特典による来店','前髪カット＋コテ巻きの総数を入力。総数 × 10pt','1',`${sum(target,'nextBenefitVisitors',true)}人`)+field('preStaffLesson','入社前スタッフのレッスン監督時間','営業時間外のみ。1時間 = 50pt','0.5',`${sum(target,'preStaffLesson',true)}h`)+dailySelf()+dailyLessonRecord()}
+function stylistMonthlyFields(){return field('techSales','技術売上','店販売上比の計算に使用','1','-')+field('retailSales','店販売上','5%以上=100pt／10%以上=300pt／20%以上=700pt','1','0%')+field('reviewCount','クチコミ件数','40以上=150pt／50以上=250pt／60以上=350pt／70以上=件数×10pt','1','-')+selectField('attendance','1ヶ月無遅刻無欠席','達成でベースポイント100pt',[[0,'未達成／登録なし'],[100,'達成 +100pt']])+ratioFields()+field('selfAttractMonth','新規自己集客（※媒体問わない）','日々入力の「現在」を確認して月末に入力','1',`${sum(target,'selfAttractDaily',true)}人`)+field('minimoRepeat','ミニモリピート率（%）','30〜50%=300pt／51〜70%=700pt／71%以上=1200pt','0.1','-')+field('referralMonth','紹介カード戻り枚数','枚数 × 100pt　※紹介カードの現物があること','1','-')+field('lessonMonth','レッスン','日々入力の「現在」を確認して月末に入力','0.5',`${sum(target,'lessonRecordDaily',true)}h`)+field('unitPrice','客単価','14,000円以上からポイント対象','1','-')}
+function premiumDailyFields(){return selectField('promotion','ロイヤルスタイリスト昇格','プレミアムスタイリスト昇格からの期間',[[0,'なし'],[3000,'6ヶ月以内 +3000pt'],[5000,'3ヶ月以内 +5000pt'],[8000,'初月 +8000pt']])+field('referral','紹介カード戻り枚数','1枚 = 100pt　※紹介カードの現物があること','1',`${sum(target,'referral',true)}枚`)+field('supervision','レッスン監督時間','後輩のレッスンを営業時間外にみた時間を1時間毎に記入。','1',`${sum(target,'supervision',true)}h`)+field('assistantGuest','アシスタント指名ありのお客様人数','1人 = 10pt','1',`${sum(target,'assistantGuest',true)}人`)+field('nextBenefitVisitors','次回予約特典による来店','前髪カット＋コテ巻きの総数を入力。総数 × 10pt','1',`${sum(target,'nextBenefitVisitors',true)}人`)+dailySelf()}
+function premiumMonthlyFields(){return ratioFields()+field('minimoRepeat','ミニモリピート率（%）','30〜50%=300pt／51〜70%=850pt／71%以上=1500pt','0.1','-')+field('selfAttractMonth','新規自己集客（※媒体問わない）','日々入力の「現在」を確認して月末に入力','1',`${sum(target,'selfAttractDaily',true)}人`)+field('unitPrice','客単価','16,000円以上からポイント対象','1','-')+field('techSales','技術売上','店販売上比の計算に使用','1','-')+field('retailSales','店販売上','10%以上=500pt／15%以上=750pt／20%以上=1000pt','1','0%')+field('reviewCount','クチコミ件数','40以上=100pt／50以上=200pt／60以上=300pt／70以上=件数×10pt','1','-')+selectField('attendance','1ヶ月無遅刻無欠席','達成でベースポイント150pt',[[0,'未達成／登録なし'],[150,'達成 +150pt']])+selectField('eyelashBenefit','アイラッシュ特典をポイントに変換','その月の特典をポイントに変換',[[0,'変換しない'],[1000,'1,000ptに変換']])+selectField('nailBenefit','ネイル特典をポイントに変換','その月の特典をポイントに変換',[[0,'変換しない'],[1000,'1,000ptに変換']])+selectField('holidayBenefit','休み＋1特典をポイントに変換','その月の特典をポイントに変換',[[0,'変換しない'],[1000,'1,000ptに変換']])}
+function assistantDailyFields(){return field('lesson','レッスン時間','150時間を超えても記入可。150時間までポイント対象。','0.5',`${sum(target,'lesson')}h`)+field('plus','プラス提案額','金額のみ記録・ポイントなし','1',`¥${sum(target,'plus').toLocaleString()}`)+field('n20','指名ポイント 20pt対象','シャンプー／3step／10分スパ／20分スパ','1',sum(target,'n20'))+field('n40','指名ポイント 40pt対象','Aujua／バイカルテ／30分スパ','1',sum(target,'n40'))+field('n80','指名ポイント 60pt対象','インメトリィ／バルジュア／Aujuaスパ／髪質改善','1',sum(target,'n80'))+field('assistantNomination','アシスタント指名獲得数','1件 = 30pt','1',sum(target,'assistantNomination'))+field('assistantReviews','アシスタント クチコミ件数','1件 = 50pt','1',sum(target,'assistantReviews'))+field('preStaffLesson','入社前スタッフのレッスン監督','1時間 = 30pt','0.5',`${sum(target,'preStaffLesson')}h`)+`<div class="field"><strong>カット1発合格</strong><div class="note">各項目につき1回だけポイント獲得</div><select id="cutPass" onchange="updatePreview()"><option value="">なし</option><option value="layerAdvanced">レイヤー上級 +500pt</option><option value="oneLength">ワンレン +800pt</option><option value="sameLayer">セイムレイヤー +800pt</option><option value="mash">マッシュ +800pt</option><option value="layerBasic">レイヤー初級 +1500pt</option><option value="short">ショート +1500pt</option></select></div>`}
+function assistantMonthlyFields(){return '<div class="notice">アシスタントの月末入力項目は、親機のルール設定から追加・変更できます。</div>'}
+function showInput(){setActive('navInput');let m=member(target),today=new Date().toISOString().slice(0,10),daily='',monthly='';if(m.job==='assistant'){daily=assistantDailyFields();monthly=assistantMonthlyFields()}if(m.job==='jr'){daily=jrDailyFields();monthly=jrMonthlyFields()}if(m.job==='stylist'){daily=stylistDailyFields();monthly=stylistMonthlyFields()}if(m.job==='premium'){daily=premiumDailyFields();monthly=premiumMonthlyFields()}daily+=customPointFields(m.job,'daily');monthly+=customPointFields(m.job,'monthly');page.innerHTML=`<div class="card"><div class="section-title">${esc(target)}｜${roleJP(m.job)}</div><div class="label">記入日</div><input id="entryDate" type="date" value="${today}"></div><div class="tabs"><button class="${inputTab==='daily'?'active':''}" onclick="inputTab='daily';showInput()">日々入力</button><button class="${inputTab==='monthly'?'active':''}" onclick="inputTab='monthly';showInput()">月末入力</button></div><div>${inputTab==='monthly'?monthly:daily}</div><div class="preview"><div class="smalltxt">今回の送信で加算されるポイント</div><div class="big"><span id="previewPoints">0</span> pt</div><div class="desc" id="previewDesc">入力するとここに自動計算されます。</div></div><button style="width:100%" onclick="saveEntry()">この内容を保存</button>`;updatePreview()}
+function val(id){return Number(document.getElementById(id)?.value||0)} function tier(v,a){for(let i=0;i<a.length;i++)if(v>=a[i][0])return a[i][1];return 0}
+function assistantLessonTotal(h){h=Math.min(+h||0,150);let r=db.rules.assistant,p=0;if(h<=49)p=h*r.lesson1;else if(h<=119)p=49*r.lesson1+(h-49)*r.lesson2;else p=49*r.lesson1+70*r.lesson2+(h-119)*r.lesson3;if(h>=50)p+=r.bonus50;if(h>=120)p+=r.bonus120;return p}
+function computeEntryPoints(){let m=member(target),p=0,d=[];const add=(x,t)=>{if(x){p+=x;d.push(`${t} +${Math.round(x)}pt`)}};if(m.job==='assistant'&&inputTab==='daily'){let r=db.rules.assistant,old=sum(target,'lesson'),nw=old+val('lesson');add(assistantLessonTotal(nw)-assistantLessonTotal(old),'レッスン');add(val('n20')*r.n20,'20pt指名');add(val('n40')*r.n40,'40pt指名');add(val('n80')*r.n80,'60pt指名');add(val('assistantNomination')*r.nomination,'アシスタント指名');add(val('assistantReviews')*r.reviews,'クチコミ');add(val('preStaffLesson')*r.preStaffLesson,'入社前スタッフ監督');const cp=document.getElementById('cutPass')?.value;const cmap={layerAdvanced:r.cutLayerAdvanced,oneLength:r.cutOneLength,sameLayer:r.cutSameLayer,mash:r.cutMash,layerBasic:r.cutLayerBasic,short:r.cutShort};if(cp&&cmap[cp]){const already=entries(target).some(e=>e.cutPass===cp);if(!already)add(cmap[cp],'カット1発合格')}}
+if(m.job==='jr'){let r=db.rules.jr;if(inputTab==='daily'){add(val('referral')*r.referral,'紹介カード');add(val('preStaffLesson')*r.supervision,'レッスン監督')}else{let nn=val('newNext'),ng=val('newGuests'),ratio=ng?nn/ng*100:0;let mr=val('minimoRepeat'),u=val('unitPrice'),tech=val('techSales'),ret=val('retailSales'),rr=tech?ret/tech*100:0,rc=val('reviewCount'),sa=val('selfAttractMonth');add(tier(ratio,[[100,1000],[90,500],[80,300],[70,100],[60,60]]),`新規次回予約率 ${ratio.toFixed(1)}%`);add(tier(mr,[[71,800],[51,500],[30,150]]),'ミニモリピート率');add(tier(u,[[15000,300],[14000,140],[13000,130]]),'客単価');add(tier(rr,[[15,300],[10,200]]),`店販売上比 ${rr.toFixed(1)}%`);add(val('nextBenefitVisitors')*r.nextBenefit,'次回予約特典');add(tier(rc,[[50,200],[40,120],[30,100]]),'クチコミ');add(val('jrAttendance'),'無遅刻無欠席');add(val('promotion'),'昇格');add(sa>=100?sa*r.self100mult:tier(sa,[[70,r.self70],[60,r.self60],[50,r.self50],[40,r.self40],[20,r.self20]]),'新規自己集客')}}
+if(m.job==='stylist'){let r=db.rules.stylist;if(inputTab==='daily'){add(val('promotion'),'昇格');add(val('referral')*r.referral,'紹介カード');add(val('assistantGuest')*r.assistantGuest,'アシスタント指名');add(val('nextBenefitVisitors')*r.nextBenefit,'次回予約特典');add(val('preStaffLesson')*r.supervision,'レッスン監督')}else{let tech=val('techSales'),ret=val('retailSales'),rr=tech?ret/tech*100:0,rc=val('reviewCount'),nn=val('newNext'),ng=val('newGuests'),nr=ng?nn/ng*100:0,sa=val('selfAttractMonth'),mr=val('minimoRepeat'),lh=val('lessonMonth'),u=val('unitPrice');add(tier(rr,[[20,r.retail20],[10,r.retail10],[5,r.retail5]]),`店販売上比 ${rr.toFixed(1)}%`);add(rc>=70?rc*r.review70mult:tier(rc,[[60,r.review60],[50,r.review50],[40,r.review40]]),'クチコミ');add(val('attendance'),'無遅刻無欠席');add(tier(nr,[[100,r.next100],[90,r.next90],[80,r.next80],[70,r.next70]]),`新規次回予約率 ${nr.toFixed(1)}%`);add(sa>=100?sa*r.self100mult:tier(sa,[[70,r.self70],[60,r.self60],[50,r.self50],[40,r.self40],[30,r.self30]]),'新規自己集客');add(tier(mr,[[71,r.minimo71],[51,r.minimo51],[30,r.minimo30]]),'ミニモリピート率');add(val('referralMonth')*r.referral,'紹介カード');add(lh>=50?lh*r.lesson50mult:tier(lh,[[40,r.lesson40],[30,r.lesson30],[20,r.lesson20],[10,r.lesson10]]),'レッスン');add(tier(u,[[18000,r.unit18],[17000,r.unit17],[16000,r.unit16],[15000,r.unit15],[14000,r.unit14]]),'客単価')}}
+if(m.job==='premium'){let r=db.rules.premium;if(inputTab==='daily'){add(val('promotion'),'昇格');add(val('referral')*r.referral,'紹介カード');add(val('supervision')*r.supervision,'レッスン監督');add(val('assistantGuest')*r.assistantGuest,'アシスタント指名');add(val('nextBenefitVisitors')*r.nextBenefit,'次回予約特典')}else{let nn=val('newNext'),ng=val('newGuests'),nr=ng?nn/ng*100:0,mr=val('minimoRepeat'),sa=val('selfAttractMonth'),u=val('unitPrice'),tech=val('techSales'),ret=val('retailSales'),rr=tech?ret/tech*100:0,rc=val('reviewCount');add(tier(nr,[[100,r.next100],[90,r.next90],[85,r.next85],[80,r.next80],[75,r.next75]]),`新規次回予約率 ${nr.toFixed(1)}%`);add(tier(mr,[[71,r.minimo71],[51,r.minimo51],[30,r.minimo30]]),'ミニモリピート率');add(sa>=100?sa*r.self100mult:tier(sa,[[70,r.self70],[60,r.self60],[50,r.self50],[40,r.self40],[30,r.self30]]),'新規自己集客');add(tier(u,[[20000,r.unit20],[19000,r.unit19],[18000,r.unit18],[17000,r.unit17],[16000,r.unit16]]),'客単価');add(tier(rr,[[20,r.retail20],[15,r.retail15],[10,r.retail10]]),`店販売上比 ${rr.toFixed(1)}%`);add(rc>=70?rc*r.review70mult:tier(rc,[[60,r.review60],[50,r.review50],[40,r.review40]]),'クチコミ');add(val('attendance'),'無遅刻無欠席');add(val('eyelashBenefit'),'アイラッシュ特典');add(val('nailBenefit'),'ネイル特典');add(val('holidayBenefit'),'休み＋1特典')}}
+(db.customPoints?.[m.job]||[]).filter(x=>x.mode===inputTab).forEach(x=>{const q=val(`customPoint_${x.id}`);const cp=x.calc==='fixed'?(q>=Number(x.threshold)?Number(x.points):0):q*Number(x.points);add(cp,x.name)});return {pts:p,desc:d}}
+function ratioPointFor(job,kind,ratio){
+  const r=db.rules[job]||{};
+  if(kind==='next'){
+    if(job==='jr') return tier(ratio,[[100,1000],[90,500],[80,300],[70,100],[60,60]]);
+    if(job==='stylist') return tier(ratio,[[100,r.next100],[90,r.next90],[80,r.next80],[70,r.next70]]);
+    if(job==='premium') return tier(ratio,[[100,r.next100],[90,r.next90],[85,r.next85],[80,r.next80],[75,r.next75]]);
+  }
+  if(kind==='retail'){
+    if(job==='jr') return tier(ratio,[[15,300],[10,200]]);
+    if(job==='stylist') return tier(ratio,[[20,r.retail20],[10,r.retail10],[5,r.retail5]]);
+    if(job==='premium') return tier(ratio,[[20,r.retail20],[15,r.retail15],[10,r.retail10]]);
+  }
+  return 0;
+}
+function updatePreview(){
+  // 入力した瞬間に「現在」を更新（保存済み累計＋今回入力）
+  document.querySelectorAll('#page input[type=number]').forEach(inp=>{
+    const el=document.getElementById('cur_'+inp.id); if(!el)return;
+    if(inp.id==='newNext'||inp.id==='retailSales')return; // 比率＋ポイント表示は下で上書き
+    const base=Number(el.dataset.base||0),v=Number(inp.value||0),prefix=el.dataset.prefix||'',suffix=el.dataset.suffix||'';
+    let total=base+v;
+    let txt=suffix==='%'?total.toFixed(1):Number.isInteger(total)?total.toLocaleString():total.toLocaleString(undefined,{maximumFractionDigits:2});
+    el.textContent=`${prefix}${txt}${suffix}`;
+  });
+  const job=member(target)?.job;
+  let tech=val('techSales'),ret=val('retailSales'),rr=tech?ret/tech*100:0;
+  const retailEl=document.getElementById('cur_retailSales');
+  if(retailEl){
+    const rp=ratioPointFor(job,'retail',rr);
+    retailEl.innerHTML=`¥${ret.toLocaleString()}<br>${rr.toFixed(1)}% ｜ ${Math.round(rp).toLocaleString()}pt`;
+  }
+  const nn=val('newNext'),ng=val('newGuests'),nr=ng?nn/ng*100:0;
+  const nextEl=document.getElementById('cur_newNext');
+  if(nextEl){
+    const np=ratioPointFor(job,'next',nr);
+    nextEl.innerHTML=`${nn.toLocaleString()}人<br>${nr.toFixed(1)}% ｜ ${Math.round(np).toLocaleString()}pt`;
+  }
+  const r=computeEntryPoints();
+  const pointsEl=document.getElementById('previewPoints');
+  const descEl=document.getElementById('previewDesc');
+  if(pointsEl) pointsEl.textContent=Math.round(Number(r.pts)||0).toLocaleString();
+  if(descEl) descEl.textContent=r.desc.length?r.desc.join(' ／ '):'入力するとここに自動計算されます。';
+}
+function saveEntry(){let m=member(target);if(m.job==='premium'&&inputTab==='daily'&&val('supervision')%1!==0){alert('レッスン監督時間は1時間単位で入力してください。0.5時間などは入力できません。');return}let c=computeEntryPoints(),e={id:Date.now(),name:target,job:m.job,date:entryDate.value,mode:inputTab,entryPoints:c.pts};document.querySelectorAll('#page input[type=number],#page select').forEach(x=>{if(!x.id)return;if(x.id==='cutPass')e[x.id]=x.value;else e[x.id]=Number(x.value)||0});if(e.techSales!==undefined&&e.retailSales!==undefined)e.retailRatio=e.techSales?e.retailSales/e.techSales*100:0;if(e.newNext!==undefined&&e.newGuests!==undefined)e.newNextRatio=e.newGuests?e.newNext/e.newGuests*100:0;db.entries.push(e);save();alert(`保存しました（今回 +${Math.round(c.pts)}pt）`);showInput()}
+function historyText(e){let parts=[];if(e.entryPoints)parts.push(`今回 +${Math.round(e.entryPoints)}pt`);if(e.newNextRatio!==undefined)parts.push(`新規次回予約率 ${e.newNextRatio.toFixed(1)}%`);if(e.retailRatio!==undefined)parts.push(`店販売上比 ${e.retailRatio.toFixed(1)}%`);return parts.join(' ／ ')||`${e.mode==='monthly'?'月末':'日々'}入力を保存`}
+function showHistory(){setActive('navHistory');let a=entries(target).slice().sort((a,b)=>(b.id||0)-(a.id||0));page.innerHTML=`<div class="card"><div class="section-title">${esc(target)}の申請・入力履歴</div>${a.length?a.map(e=>`<div class="history"><div class="history-date">${e.date}｜${roleJP(e.job||member(target).job)}</div><div class="history-text">${historyText(e)}</div></div>`).join(''):'<div class="head-sub">まだ履歴がありません。</div>'}</div>`}
+function topRanks(k){return db.members.filter(m=>m.active!==false).map(m=>({name:m.name,v:sum(m.name,k)})).sort((a,b)=>b.v-a.v).slice(0,3)} let rankKey='lesson';
+function showRanking(){setActive('navRanking');let tabs=[['lesson','レッスン時間'],['plus','プラス提案額'],['assistantGuest','指名獲得数'],['n20','指名ポイント'],['shampooPraise','シャンプー賞賛']],rows=topRanks(rankKey);page.innerHTML=`<div class="card"><div class="section-title">ランキング TOP3</div><div class="tabs">${tabs.map(([k,t])=>`<button class="${rankKey===k?'active':''}" onclick="rankKey='${k}';showRanking()">${t}</button>`).join('')}</div>${rows.map((r,i)=>`<div class="rank"><div class="rank-no">${i+1}</div><div class="rank-name">${esc(r.name)}</div><div class="rank-val">${r.v.toLocaleString()}</div></div>`).join('')}</div>`}
+function addMember(){let n=newMemberName.value.trim(),pin=newMemberPin.value.trim()||'0000',job=newMemberRole.value;if(!n)return alert('名字を入力してください');if(member(n))return alert('すでに登録されています');db.members.push({name:n,pin,job,device:'child',active:true});save();refreshNames();showMyPage()}
+function toggleActive(n){let m=member(n);m.active=m.active===false?true:false;save();refreshNames();showMyPage()} function toggleDevice(n){let m=member(n),cnt=db.members.filter(x=>x.device==='parent'&&x.active!==false).length;if(m.device==='parent'&&cnt<=1)return alert('最後の親機は子機に変更できません');m.device=m.device==='parent'?'child':'parent';save();showMyPage()} function requestDeviceChange(n){let m=member(n);if(!m)return;const from=m.device==='parent'?'親機':'子機',to=m.device==='parent'?'子機':'親機';if(!confirm(`${n}さんの権限を「${from}」から「${to}」へ変更しますか？\n\n※権限を変更すると使える管理機能が変わります。`))return;toggleDevice(n);alert(`${n}さんを「${to}」に変更しました。`)}
+function changeJob(n,v){member(n).job=v;save();showMyPage()} function resetPin(n){member(n).pin='0000';save();alert(`${n}さんのPINを0000に戻しました`)}
+function changeMyPin(){let a=oldPin.value,b=newPin.value;if(a!==me().pin)return alert('現在のPINが違います');if(!/^\d{4}$/.test(b))return alert('新しいPINは4桁の数字にしてください');me().pin=b;save();alert('PINを変更しました')}
+const ruleLabels={
+assistant:{lesson1:'レッスン｜0〜49時間：1時間あたり',lesson2:'レッスン｜50〜119時間：1時間あたり',lesson3:'レッスン｜120〜150時間：1時間あたり',bonus50:'レッスン｜50時間達成ボーナス',bonus120:'レッスン｜120時間達成ボーナス',n20:'指名ポイント｜20pt対象：1件あたり',n40:'指名ポイント｜40pt対象：1件あたり',n80:'指名ポイント｜インメトリィ・バルジュア・Aujuaスパ・髪質改善：1件あたり',nomination:'アシスタント指名獲得：1件あたり',reviews:'アシスタント口コミ：1件あたり',preStaffLesson:'入社前スタッフのレッスン監督：1時間あたり',cutLayerAdvanced:'カット1発合格｜レイヤー上級',cutOneLength:'カット1発合格｜ワンレン',cutSameLayer:'カット1発合格｜セイムレイヤー',cutMash:'カット1発合格｜マッシュ',cutLayerBasic:'カット1発合格｜レイヤー初級',cutShort:'カット1発合格｜ショート'},
+jr:{supervision:'入社前スタッフのレッスン監督：1時間あたり',referral:'紹介カード戻り：1枚あたり',nextBenefit:'次回予約特典による来店：1件あたり',self20:'新規自己集客｜20〜39人',self40:'新規自己集客｜40〜49人',self50:'新規自己集客｜50〜59人',self60:'新規自己集客｜60〜69人',self70:'新規自己集客｜70〜99人',self100mult:'新規自己集客｜100人以上：1人あたり'},
+stylist:{promo6:'プレミアム昇格｜6ヶ月以内',promo3:'プレミアム昇格｜3ヶ月以内',promoFirst:'スタイリスト昇格後初月・指名技術売上300万円達成',referral:'紹介カード戻り：1枚あたり',assistantGuest:'アシスタント指名ありのお客様：1人あたり',nextBenefit:'次回予約特典による来店：1件あたり',supervision:'入社前スタッフのレッスン監督：1時間あたり',retail5:'店販売上比｜5%以上',retail10:'店販売上比｜10%以上',retail20:'店販売上比｜20%以上',review40:'クチコミ｜40〜49件',review50:'クチコミ｜50〜59件',review60:'クチコミ｜60〜69件',review70mult:'クチコミ｜70件以上：1件あたり',attendance:'1ヶ月無遅刻無欠席',next70:'新規次回予約率｜70%以上',next80:'新規次回予約率｜80%以上',next90:'新規次回予約率｜90%以上',next100:'新規次回予約率｜100%以上',self30:'新規自己集客｜30〜39人',self40:'新規自己集客｜40〜49人',self50:'新規自己集客｜50〜59人',self60:'新規自己集客｜60〜69人',self70:'新規自己集客｜70〜99人',self100mult:'新規自己集客｜100人以上：1人あたり',minimo30:'ミニモリピート率｜30〜50%',minimo51:'ミニモリピート率｜51〜70%',minimo71:'ミニモリピート率｜71%以上',lesson10:'レッスン｜10時間以上',lesson20:'レッスン｜20時間以上',lesson30:'レッスン｜30時間以上',lesson40:'レッスン｜40時間以上',lesson50mult:'レッスン｜50時間以上：1時間あたり',unit14:'客単価｜14,000円以上',unit15:'客単価｜15,000円以上',unit16:'客単価｜16,000円以上',unit17:'客単価｜17,000円以上',unit18:'客単価｜18,000円以上'},
+premium:{promo6:'ロイヤル昇格｜6ヶ月以内',promo3:'ロイヤル昇格｜3ヶ月以内',promoFirst:'ロイヤル昇格｜初月',referral:'紹介カード戻り：1枚あたり',supervision:'レッスン監督：1時間あたり',assistantGuest:'アシスタント指名ありのお客様：1人あたり',nextBenefit:'次回予約特典による来店：1件あたり',next75:'新規次回予約率｜75%以上',next80:'新規次回予約率｜80%以上',next85:'新規次回予約率｜85%以上',next90:'新規次回予約率｜90%以上',next100:'新規次回予約率｜100%以上',minimo30:'ミニモリピート率｜30〜50%',minimo51:'ミニモリピート率｜51〜70%',minimo71:'ミニモリピート率｜71%以上',self30:'新規自己集客｜30〜39人',self40:'新規自己集客｜40〜49人',self50:'新規自己集客｜50〜59人',self60:'新規自己集客｜60〜69人',self70:'新規自己集客｜70〜99人',self100mult:'新規自己集客｜100人以上：1人あたり',unit16:'客単価｜16,000円以上',unit17:'客単価｜17,000円以上',unit18:'客単価｜18,000円以上',unit19:'客単価｜19,000円以上',unit20:'客単価｜20,000円以上',retail10:'店販売上比｜10%以上',retail15:'店販売上比｜15%以上',retail20:'店販売上比｜20%以上',review40:'クチコミ｜40〜49件',review50:'クチコミ｜50〜59件',review60:'クチコミ｜60〜69件',review70mult:'クチコミ｜70件以上：1件あたり',attendance:'1ヶ月無遅刻無欠席',benefit:'福利厚生特典をポイント変換：1項目'}
+};
+let ruleEditRole=null,ruleDraft=null;
+function openRuleEdit(role){ruleDraft=JSON.parse(JSON.stringify(db.rules));ruleEditRole=role;showMyPage()}
+function cancelRuleEdit(){ruleDraft=null;ruleEditRole=null;showMyPage()}
+function saveRuleEdit(role){if(!confirm(`${roleJP(role)}のポイントルール変更を保存しますか？`))return;db.rules[role]=JSON.parse(JSON.stringify(ruleDraft[role]));save();ruleEditRole=null;ruleDraft=null;alert(`${roleJP(role)}のポイントルールを保存しました`);showMyPage()}
+function updateRuleDraft(role,key,value){if(ruleDraft&&ruleEditRole===role)ruleDraft[role][key]=Number(value)}
+function addCustomPoint(role){
+ const name=document.getElementById(`cpName_${role}`)?.value.trim(),note=document.getElementById(`cpNote_${role}`)?.value.trim(),mode=document.getElementById(`cpMode_${role}`)?.value||'daily',calc=document.getElementById(`cpCalc_${role}`)?.value||'multiply',points=Number(document.getElementById(`cpPoints_${role}`)?.value||0),threshold=Number(document.getElementById(`cpThreshold_${role}`)?.value||0);
+ if(!name)return alert('項目名を入力してください'); if(points<0)return alert('ポイントを確認してください');
+ db.customPoints[role].push({id:Date.now()+Math.floor(Math.random()*1000),name,note,mode,calc,points,threshold});save();alert(`${roleJP(role)}に「${name}」を追加しました`);showMyPage();
+}
+function deleteCustomPoint(role,id){const x=(db.customPoints[role]||[]).find(x=>x.id===id);if(!x)return;if(!confirm(`「${x.name}」を削除しますか？\n※過去に保存済みのポイント履歴は消えません。`))return;db.customPoints[role]=db.customPoints[role].filter(x=>x.id!==id);save();showMyPage()}
+function customPointAdmin(role){const list=db.customPoints?.[role]||[];return `<div style="margin-top:14px;padding-top:12px;border-top:1px solid #eee5dc"><button class="secondary" style="width:100%" onclick="document.getElementById('cpAdd_${role}').classList.toggle('hidden')">＋ 新しいポイント項目を追加</button><div id="cpAdd_${role}" class="hidden" style="margin-top:12px"><div class="label">表示する場所</div><select id="cpMode_${role}"><option value="daily">日々入力</option><option value="monthly">月末入力</option></select><div class="label">項目名</div><input id="cpName_${role}" placeholder="例：モデル集客数"><div class="label">説明</div><input id="cpNote_${role}" placeholder="例：媒体問わず"><div class="label">計算方法</div><select id="cpCalc_${role}" onchange="document.getElementById('cpThresholdWrap_${role}').style.display=this.value==='fixed'?'block':'none'"><option value="multiply">入力した数 × ポイント</option><option value="fixed">条件以上で固定ポイント</option></select><div id="cpThresholdWrap_${role}" style="display:none"><div class="label">条件となる数値</div><input id="cpThreshold_${role}" type="number" min="0" placeholder="例：10"></div><div class="label">ポイント</div><input id="cpPoints_${role}" type="number" min="0" placeholder="例：50"><button style="width:100%;margin-top:10px" onclick="addCustomPoint('${role}')">この項目を追加</button></div>${list.length?`<div class="note" style="margin-top:12px">追加済みの項目</div>${list.map(x=>`<div class="setting-row"><div style="max-width:72%"><b>${esc(x.name)}</b><div class="head-sub">${x.mode==='daily'?'日々入力':'月末入力'}｜${esc(customPointRuleText(x))}</div></div><button class="ghost small" onclick="deleteCustomPoint('${role}',${x.id})">削除</button></div>`).join('')}`:''}</div>`}
+function ruleEditor(){
+ return roles.map(role=>{
+   const editing=ruleEditRole===role;
+   const src=editing?ruleDraft[role]:db.rules[role];
+   return `<div class="field"><strong>${roleJP(role)}</strong><div class="note">${editing?'この役職だけ編集中です。保存するまで反映されません。':'現在の設定です。下のボタンを押すまで編集できません。'}</div>${Object.entries(src).filter(([k])=>ruleLabels[role]?.[k]).map(([k,v])=>`<div class="setting-row"><span style="font-size:11px;max-width:68%">${ruleLabels[role][k]}</span>${editing?`<input style="width:105px;padding:8px" type="number" value="${v}" oninput="updateRuleDraft('${role}','${k}',this.value)">`:`<b>${Number(v).toLocaleString()} pt</b>`}</div>`).join('')}<div style="display:flex;gap:8px;margin-top:12px">${editing?`<button class="secondary" style="flex:1" onclick="cancelRuleEdit()">変更をやめる</button><button style="flex:1" onclick="saveRuleEdit('${role}')">この役職の変更を保存</button>`:`<button style="width:100%" onclick="openRuleEdit('${role}')">${roleJP(role)}のポイントルールを変更</button>`}</div>${customPointAdmin(role)}</div>`
+ }).join('')
+}
+function showMyPage(){setActive('navMy');let m=me(),admin='';if(isParent())admin=`<div class="card"><div class="section-title">月末ポイント集計</div>${orderedMembers(db.members.filter(x=>x.active!==false)).map(x=>`<div class="setting-row"><div><b>${esc(x.name)}</b><div class="head-sub">${roleJP(x.job)}｜累計 ${Math.round(totalPoints(x.name)).toLocaleString()}pt</div></div><b>今月 ${Math.round(monthlyPoints(x.name)).toLocaleString()}pt</b></div>`).join('')}</div><div class="card"><div class="section-title">スタッフ追加・管理</div><div class="notice">新卒・新入社員を追加すると、すぐ子機としてログインできます。親機／子機の変更は「権限を変更」を押した後に確認画面が表示されます。</div><div class="label">名字</div><input id="newMemberName" placeholder="例：佐藤"><div class="label">初期PIN</div><input id="newMemberPin" inputmode="numeric" maxlength="4" placeholder="0000"><div class="label">役職</div><select id="newMemberRole">${roles.map(r=>`<option value="${r}">${roleJP(r)}</option>`).join('')}</select><button style="width:100%;margin-top:10px" onclick="addMember()">スタッフを追加</button>${orderedMembers(db.members).map(x=>`<div class="field" style="margin-top:10px"><div class="setting-row"><div><b>${esc(x.name)}</b><div class="head-sub">${x.device==='parent'?'親機':'子機'}｜${x.active===false?'ログイン停止中':'利用中'}</div></div><button class="secondary small" onclick="requestDeviceChange('${x.name}')">権限を変更</button></div><select onchange="changeJob('${x.name}',this.value)">${roles.map(r=>`<option value="${r}" ${x.job===r?'selected':''}>${roleJP(r)}</option>`).join('')}</select><div style="display:flex;gap:6px;margin-top:8px"><button class="secondary small" onclick="resetPin('${x.name}')">PIN初期化</button><button class="ghost small" onclick="toggleActive('${x.name}')">${x.active===false?'ログイン再開':'ログイン停止'}</button></div></div>`).join('')}</div><div class="card"><div class="section-title">ポイントルール設定</div><div class="notice">役職ごとに変更できます。普段は閲覧のみで、各役職の下にある「ポイントルールを変更」を押した役職だけ編集できます。保存済みの過去データは再計算されません。</div>${ruleEditor()}</div>`;page.innerHTML=`<div class="card"><div class="section-title">マイページ</div><b style="font-size:21px">${esc(user)}</b><div class="head-sub">${roleJP(m.job)}｜${m.device==='parent'?'親機（管理者）':'子機'}</div><div class="label">現在のPIN</div><input id="oldPin" type="password" inputmode="numeric" maxlength="4"><div class="label">新しい4桁PIN</div><input id="newPin" type="password" inputmode="numeric" maxlength="4"><button class="secondary" style="width:100%;margin-top:8px" onclick="changeMyPin()">パスワードを変更</button><button class="ghost" style="width:100%;margin-top:8px" onclick="logout()">ログアウト</button></div>${admin}`}
+</script>
+
+</body>
+</html>
