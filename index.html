@@ -13,7 +13,7 @@
 <meta http-equiv="Expires" content="0">
 <script>
 /* Home-screen auto update bootstrap v123: re-check on launch/resume as well as first load. */
-const APP_BUILD = "2026-11-05-v137-parent-self-commission";
+const APP_BUILD = "2026-11-05-v138-history-date-status";
 let __freshCheckRunning = false;
 async function ensureFreshApp(){
   if (__freshCheckRunning) return;
@@ -1725,9 +1725,44 @@ async function deleteHistoryItem(id,key,button){if(!isParent()||saveInProgress)r
  else e[key]=0;
  recalcMemberMonthEntries(e.memberId||member(e.name)?.id,monthKey(e.date));
  await commitHistoryMutation(before,button)}
-async function editHistory(id){if(!isParent()||saveInProgress)return;let e=db.entries.find(x=>String(x.id)===String(id));if(!e)return;let date=prompt('記入日を変更',e.date);if(date===null)return;const before=JSON.parse(JSON.stringify(db)),oldMonth=monthKey(e.date);e.date=date||e.date;recalcMemberMonthEntries(e.memberId||member(e.name)?.id,oldMonth);recalcMemberMonthEntries(e.memberId||member(e.name)?.id,monthKey(e.date));const ok=await save();if(!ok)db=normalizeDB(before);showHistory()}
+let historyDateChangeInProgress=false;
+let historyDateStatusTimer;
+function showHistoryDateStatus(message,isError=false,persistent=false){
+ clearTimeout(historyDateStatusTimer);
+ let status=document.getElementById('historyDateStatus');
+ if(!status){status=document.createElement('div');status.id='historyDateStatus';status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.style.cssText='position:fixed;left:50%;bottom:100px;transform:translateX(-50%);z-index:1000;max-width:90vw;padding:14px 20px;border-radius:14px;box-shadow:0 4px 24px #0002;font-size:14px;font-weight:700;text-align:center;pointer-events:none';document.body.appendChild(status)}
+ status.style.background=isError?'#fff0ee':'#332d29';status.style.color=isError?'#9a4f48':'#fff';status.textContent=message;
+ if(!persistent)historyDateStatusTimer=setTimeout(()=>status.remove(),isError?7000:3500);
+}
+async function editHistory(id,button){
+ if(!isParent()||saveInProgress||historyDateChangeInProgress)return;
+ const e=db.entries.find(x=>String(x.id)===String(id));if(!e)return;
+ let date=prompt('記入日を変更',e.date);if(date===null)return;
+ date=date.trim();if(!date||date===e.date)return;
+ const parsed=new Date(date+'T00:00:00Z');
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!Number.isFinite(parsed.getTime())||parsed.toISOString().slice(0,10)!==date){showHistoryDateStatus('日付は YYYY-MM-DD の形式で入力してください',true);return}
+ const before=JSON.parse(JSON.stringify(db)),oldMonth=monthKey(e.date),viewState=captureHistoryViewState();
+ historyDateChangeInProgress=true;
+ if(button){button.disabled=true;button.textContent='変更中…'}
+ showHistoryDateStatus('変更中…',false,true);
+ try{
+  e.date=date;
+  recalcMemberMonthEntries(e.memberId||member(e.name)?.id,oldMonth);
+  recalcMemberMonthEntries(e.memberId||member(e.name)?.id,monthKey(e.date));
+  const ok=await save();
+  if(!ok)db=normalizeDB(before);
+  showHistory();restoreHistoryViewState(viewState);
+  showHistoryDateStatus(ok?'変更完了':'変更できませんでした。もう一度お試しください。',!ok);
+ }catch(error){
+  db=normalizeDB(before);showHistory();restoreHistoryViewState(viewState);
+  showHistoryDateStatus('変更できませんでした。もう一度お試しください。',true);
+ }finally{
+  historyDateChangeInProgress=false;
+  if(button&&button.isConnected){button.disabled=false;button.textContent='日付を編集'}
+ }
+}
 async function deleteHistory(id,button){if(!isParent()||saveInProgress)return;const e=db.entries.find(x=>String(x.id)===String(id));if(!e)return;if(!confirm('この申請を丸ごと削除しますか？\n入力した全項目が削除されます。'))return;const before=JSON.parse(JSON.stringify(db)),mid=e.memberId||member(e.name)?.id,mk=monthKey(e.date),wasNewgrad=!!e.newgradPassKey;db.entries=db.entries.filter(x=>String(x.id)!==String(id));if(wasNewgrad)recalcNewgradCompletion(mid);else recalcMemberMonthEntries(mid,mk);await commitHistoryMutation(before,button)}
-function historyEntryHTML(e){return `<div class="history"><div class="history-date">${e.manualGrant?'親機手動付与':(e.mode==='monthly'?'月末入力':'日々入力')}｜${roleJP(e.job||member(target).job)}</div><div class="history-text">${historyText(e)}</div>${historyItemsHTML(e)}${isParent()?`<div style="display:flex;gap:6px;margin-top:10px"><button class="secondary small" onclick='editHistory(${JSON.stringify(String(e.id))})'>日付を編集</button><button class="ghost small" onclick='deleteHistory(${JSON.stringify(String(e.id))},this)'>申請を丸ごと削除</button></div>`:''}</div>`}
+function historyEntryHTML(e){return `<div class="history"><div class="history-date">${e.manualGrant?'親機手動付与':(e.mode==='monthly'?'月末入力':'日々入力')}｜${roleJP(e.job||member(target).job)}</div><div class="history-text">${historyText(e)}</div>${historyItemsHTML(e)}${isParent()?`<div style="display:flex;gap:6px;margin-top:10px"><button class="secondary small" onclick='editHistory(${JSON.stringify(String(e.id))},this)'>日付を編集</button><button class="ghost small" onclick='deleteHistory(${JSON.stringify(String(e.id))},this)'>申請を丸ごと削除</button></div>`:''}</div>`}
 function historyGroupedHTML(a){const months={};a.forEach(e=>{const d=String(e.date||'').slice(0,10),mk=d.slice(0,7)||'日付不明';if(!months[mk])months[mk]={};if(!months[mk][d])months[mk][d]=[];months[mk][d].push(e)});return Object.keys(months).sort().reverse().map(mk=>{const days=months[mk],count=Object.values(days).reduce((n,x)=>n+x.length,0);return `<details class="history-month" data-history-key="month:${esc(mk)}"><summary class="history-fold-summary"><span>${esc(monthLabel(mk))} <span class="head-sub">${count}件</span></span><span class="history-fold-arrow">⌄</span></summary>${Object.keys(days).sort().reverse().map(d=>`<details class="history-day" data-history-key="day:${esc(d)}"><summary class="history-fold-summary"><span>${esc(formatHistoryDay(d))} <span class="head-sub">${days[d].length}件</span></span><span class="history-fold-arrow">⌄</span></summary><div class="history-day-body">${days[d].map(historyEntryHTML).join('')}</div></details>`).join('')}</details>`}).join('')}
 function formatHistoryDay(d){const p=String(d||'').split('-');if(p.length<3)return d||'日付不明';const dt=new Date(Number(p[0]),Number(p[1])-1,Number(p[2]));const w=['日','月','火','水','木','金','土'][dt.getDay()];return `${Number(p[1])}月${Number(p[2])}日（${w}）`}
 function renderHistory(){if(isParent()&&historyFromAdminList&&adminHistoryTargetId){const m=memberById(adminHistoryTargetId);if(m)setTargetMember(m)}setActive(isParent()&&historyFromAdminList?'navMy':'navHistory');let a=entries(target).slice().sort(compareEntriesNewest);page.innerHTML=`<div class="card">${isParent()&&historyFromAdminList?'<button class="secondary" style="width:100%;margin-bottom:12px" onclick="returnToAdminHistoryList()">← みんなの履歴に戻る</button>':''}<div class="section-title">${esc(target)}の申請・入力履歴</div><div class="notice">月を開く → 日付を開くと、その日の申請内容を確認できます。${isParent()?' 親機は項目ごとの削除もできます。':''}</div>${a.length?historyGroupedHTML(a):'<div class="head-sub" style="margin-top:12px">まだ履歴がありません。</div>'}</div>`}
